@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamFinder Pro</title>
+    <title>StreamFinder Pro | Home</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #050508; --accent: #e50914; --text: #ffffff; --sub-text: #b3b3b3; --border: rgba(255, 255, 255, 0.1); --glass: rgba(10, 10, 15, 0.9); }
@@ -11,16 +11,26 @@
         body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
         .container { max-width: 1300px; margin: 0 auto; padding: 0 20px; width: 100%; position: relative; z-index: 2; }
         
-        /* WALLPAPER & CSS LAINNYA SAMA DENGAN SEBELUMNYA */
-        .poster-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 0; overflow: hidden; pointer-events: none; display: flex; flex-direction: column; justify-content: center; gap: 20px; opacity: 0.6; filter: brightness(0.8) grayscale(30%); }
+        /* --- DYNAMIC WALLPAPER --- */
+        .poster-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            z-index: 0; overflow: hidden; pointer-events: none;
+            display: flex; flex-direction: column; justify-content: center; gap: 20px;
+            opacity: 0.6; filter: brightness(0.8) grayscale(30%); 
+        }
         .poster-row { display: flex; gap: 20px; width: 200%; flex-shrink: 0; }
         .poster-row img { width: 180px; border-radius: 10px; aspect-ratio: 2/3; object-fit: cover; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .row-left { animation: scrollLeft 60s linear infinite; }
         .row-right { animation: scrollRight 60s linear infinite; transform: translateX(-50%); }
         @keyframes scrollLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes scrollRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
-        .bg-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: radial-gradient(circle at center, rgba(5,5,8,0.2) 0%, rgba(5,5,8,0.95) 85%, rgba(5,5,8,1) 100%); z-index: 1; pointer-events: none; }
+        .bg-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: radial-gradient(circle at center, rgba(5,5,8,0.2) 0%, rgba(5,5,8,0.95) 85%, rgba(5,5,8,1) 100%);
+            z-index: 1; pointer-events: none;
+        }
 
+        /* --- NAVBAR --- */
         nav.main-nav { position: sticky; top: 0; z-index: 1000; padding: 15px 0; transition: 0.4s; background: transparent; }
         nav.main-nav.scrolled { background: var(--glass); border-bottom: 1px solid var(--border); backdrop-filter: blur(15px); }
         .nav-container { display: flex; justify-content: space-between; align-items: center; }
@@ -28,35 +38,55 @@
         .logo span { color: var(--accent); }
         .nav-menu { display: flex; gap: 25px; align-items: center; }
         .nav-item { color: #ddd; text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: 0.3s; cursor: pointer; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
-        .nav-item:hover, .nav-item.active { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
-        .list-badge { background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-left: 5px; }
+        .nav-item:hover { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        .list-badge { background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-left: 5px; vertical-align: middle; }
 
+        /* HERO */
         .hero-header { padding: 120px 0 80px; text-align: center; position: relative; z-index: 2; }
         .hero-title { font-size: clamp(3.5rem, 8vw, 6rem); font-weight: 900; margin: 0; line-height: 0.95; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.8); }
-        #searchInput { width: 100%; padding: 25px 40px; border-radius: 100px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.6); color: #fff; font-size: 1.2rem; outline: none; transition: 0.4s; backdrop-filter: blur(20px); }
+        .hero-subtitle { color: #ddd; font-size: 1.1rem; margin-top: 15px; margin-bottom: 40px; font-weight: 500; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
+        #searchInput { width: 100%; padding: 25px 40px; border-radius: 100px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.6); color: #fff; font-size: 1.2rem; outline: none; transition: 0.4s; backdrop-filter: blur(20px); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); }
         #searchInput:focus { border-color: var(--accent); transform: scale(1.02); background: rgba(0, 0, 0, 0.8); }
 
+        /* GRID & CARD */
         .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; margin-bottom: 40px; }
-        .card { position: relative; cursor: pointer; border-radius: 12px; overflow: hidden; transition: 0.4s; border: 1px solid var(--border); background: #000; }
-        .card:hover { transform: scale(1.05); border-color: var(--accent); z-index: 10; }
-        .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
+        .card { position: relative; cursor: pointer; border-radius: 12px; overflow: hidden; transition: all 0.4s ease; border: 1px solid var(--border); background: #000; }
+        .card:hover { transform: scale(1.05); border-color: var(--accent); box-shadow: 0 10px 30px rgba(229, 9, 20, 0.3); z-index: 10; }
+        .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; background: #111; transition: 0.4s; }
+        .card:hover img { filter: brightness(1.1); }
         .card-meta { padding: 15px; font-size: 0.85rem; background: linear-gradient(to top, #000 0%, transparent 100%); }
-        .media-badge { position: absolute; top: 10px; right: 10px; padding: 4px 10px; border-radius: 6px; font-size: 0.65rem; font-weight: 900; background: var(--accent); color: white; }
-        .badge-tv { background: #0070f3; }
+        .media-badge { position: absolute; top: 10px; right: 10px; padding: 4px 10px; border-radius: 6px; font-size: 0.65rem; font-weight: 900; text-transform: uppercase; z-index: 2; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); }
+        .badge-movie { background: var(--accent); color: white; }
+        .badge-tv { background: #0070f3; color: white; }
 
         .pagination { display: flex; justify-content: center; align-items: center; gap: 20px; margin: 50px 0; }
         .pg-btn { background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid var(--border); padding: 10px 25px; border-radius: 30px; cursor: pointer; font-weight: bold; }
         .pg-btn:hover:not(:disabled) { background: var(--accent); }
 
-        .skeleton { background: rgba(255,255,255,0.05); border-radius: 12px; aspect-ratio: 2/3; position: relative; overflow: hidden; }
-        .skeleton::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background-image: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); animation: shimmer 1.5s infinite; }
+        /* SKELETON */
+        .skeleton { background: rgba(255,255,255,0.05); position: relative; overflow: hidden; border-radius: 12px; aspect-ratio: 2/3; }
+        .skeleton::after { content: ""; position: absolute; top: 0; right: 0; bottom: 0; left: 0; transform: translateX(-100%); background-image: linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.05) 20%, rgba(255, 255, 255, 0.1) 60%, rgba(255, 255, 255, 0)); animation: shimmer 1.5s infinite; }
         @keyframes shimmer { 100% { transform: translateX(100%); } }
 
-        footer { background: #08080a; padding: 60px 0 30px; border-top: 1px solid var(--border); margin-top: 100px; position: relative; z-index: 2; text-align: center; color: var(--sub-text); font-size: 0.9rem;}
-        @media (max-width: 768px) { .nav-menu { display: none; } .hero-title { font-size: 3rem; } }
+        /* FOOTER */
+        footer { background: #08080a; padding: 70px 0 30px; border-top: 1px solid var(--border); margin-top: 100px; position: relative; z-index: 2;}
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 40px; }
+        .footer-col h4 { color: #fff; margin-bottom: 20px; font-weight: 700; }
+        .footer-col a { display: block; color: var(--sub-text); text-decoration: none; margin-bottom: 10px; font-size: 0.9rem; transition: 0.3s; }
+        .footer-col a:hover { color: var(--accent); }
+        .social-icons { display: flex; gap: 15px; }
+        .social-icon { width: 35px; height: 35px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; justify-content: center; align-items: center; transition: 0.3s; color: white; cursor: pointer;}
+        .social-icon:hover { background: var(--accent); }
+
+        @media (max-width: 768px) {
+            .nav-menu { display: none; }
+            .hero-title { font-size: 3rem; }
+            .poster-row img { width: 120px; }
+        }
     </style>
 </head>
 <body>
+
     <div class="poster-bg" id="posterBg"></div>
     <div class="bg-overlay"></div>
 
@@ -65,26 +95,27 @@
             <a href="/" class="logo">STREAM<span>FINDER</span></a>
             <div class="nav-menu">
                 <a href="/" class="nav-item">Home</a>
-                <a href="/?tab=movie" class="nav-item">Movies</a>
-                <a href="/?tab=tv" class="nav-item">TV Shows</a>
-                <a href="/watchlist" class="nav-item">My List <span class="list-badge" id="navCount">0</span></a>
+                <a onclick="loadCategory('movie')" class="nav-item">Movies</a>
+                <a onclick="loadCategory('tv')" class="nav-item">TV Shows</a>
+                <a onclick="loadWatchlist()" class="nav-item">My List <span class="list-badge" id="listCount">0</span></a>
             </div>
         </div>
     </nav>
 
     <main class="container">
         <header class="hero-header" id="heroHeader">
-            <div style="display: inline-block; padding: 6px 15px; border-radius: 30px; background: rgba(229, 9, 20, 0.2); color: var(--accent); font-size: 0.75rem; font-weight: 900; margin-bottom: 25px; border: 1px solid rgba(229, 9, 20, 0.4); backdrop-filter: blur(5px);">STREAMING SEARCH ENGINE</div>
+            <div style="display: inline-block; padding: 6px 15px; border-radius: 30px; background: rgba(229, 9, 20, 0.2); color: var(--accent); font-size: 0.75rem; font-weight: 900; letter-spacing: 2px; margin-bottom: 25px; border: 1px solid rgba(229, 9, 20, 0.4); backdrop-filter: blur(5px);">STREAMING SEARCH ENGINE</div>
             <h1 class="hero-title">Everything.<br>Everywhere.</h1>
-            <div style="max-width: 700px; margin: 40px auto 0; position: relative;">
+            <p class="hero-subtitle">Discover where to watch millions of movies and TV shows.</p>
+            <div style="max-width: 700px; margin: 0 auto; position: relative;">
                 <input type="text" id="searchInput" placeholder="Search movies, TV shows, or genres...">
             </div>
         </header>
 
         <div id="dynamicSection" style="display:none">
-            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:30px; border-left:4px solid var(--accent); padding-left:15px;">
-                <h2 id="dynamicLabel" style="margin:0; font-size:1.5rem; text-shadow:0 2px 10px black;">Results</h2>
-                <span id="totalCountDisplay" style="color:var(--sub-text); font-size:0.9rem;"></span>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; border-left: 4px solid var(--accent); padding-left: 15px; margin-bottom: 30px;">
+                <h2 id="dynamicLabel" style="margin:0; font-size: 1.5rem;">Results</h2>
+                <span id="totalCountDisplay" style="color: var(--sub-text); font-size: 0.9rem;"></span>
             </div>
             <div id="dynamicGrid" class="movie-grid"></div>
             <div class="pagination" id="paginationControls">
@@ -95,31 +126,68 @@
         </div>
 
         <div id="defaultContent">
-            <h2 style="margin-bottom:30px; font-size:1.5rem; text-shadow:0 2px 10px black; border-left:4px solid var(--accent); padding-left:15px;">Trending Now</h2>
+            <h2 style="border-left: 4px solid var(--accent); padding-left: 15px; margin-bottom: 30px; font-size: 1.5rem; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Trending Now</h2>
             <div id="trendingGrid" class="movie-grid">
                 <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
             </div>
-            
-            <h2 style="margin:50px 0 30px; font-size:1.5rem; text-shadow:0 2px 10px black; border-left:4px solid var(--accent); padding-left:15px;">Now Playing</h2>
+            <h2 style="border-left: 4px solid var(--accent); padding-left: 15px; margin: 50px 0 30px; font-size: 1.5rem; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Now Playing</h2>
             <div id="newGrid" class="movie-grid">
-                <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+                 <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
             </div>
         </div>
     </main>
 
     <footer>
-        <div class="container">© 2025 StreamFinder Pro. Data by TMDB.</div>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo" style="margin-bottom: 20px;">STREAM<span>FINDER</span></div>
+                    <p style="color: var(--sub-text); font-size: 0.9rem; line-height: 1.6;">
+                        The ultimate streaming guide. Find where to watch your favorite movies and TV shows across hundreds of services worldwide.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>Discover</h4>
+                    <a href="/">Home</a>
+                    <a onclick="loadCategory('movie')">Movies</a>
+                    <a onclick="loadCategory('tv')">TV Shows</a>
+                    <a href="/">Top Rated</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <a href="#">About Us</a>
+                    <a href="#">Contact</a>
+                    <a href="#">API</a>
+                    <a href="#">Privacy Policy</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Follow Us</h4>
+                    <div class="social-icons">
+                        <div class="social-icon">𝕏</div>
+                        <div class="social-icon">📸</div>
+                        <div class="social-icon">📘</div>
+                        <div class="social-icon">🐙</div>
+                    </div>
+                </div>
+            </div>
+            <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; text-align: center; color: var(--sub-text); font-size: 0.85rem;">
+                © 2025 StreamFinder Pro. All rights reserved. Data provided by TMDB.
+            </div>
+        </div>
     </footer>
 
     <script>
         const API_KEY = 'a820f2b45d233c0cc0c97d078536074f';
         const IMG = 'https://image.tmdb.org/t/p/original';
-        const SMALL_IMG = 'https://image.tmdb.org/t/p/w200';
+        const SMALL_IMG = 'https://image.tmdb.org/t/p/w200'; 
         
-        let currentMode = 'home'; 
-        let currentPage = 1;
-        let activeType = 'movie'; 
+        let currentType = 'search'; 
+        let currentQuery = ''; 
+        let currentParam = ''; 
+        let currentPage = 1; 
+        let activeMedia = 'movie';
 
+        // NAVBAR SCROLL EFFECT
         window.onscroll = () => {
             const nav = document.getElementById('navbar');
             if (window.scrollY > 50) nav.classList.add('scrolled');
@@ -129,141 +197,24 @@
         window.onload = () => {
             updateWatchlistCount();
             initWallpaper();
-            
-            // LOGIKA TAB (MOVIES/TV)
+
             const urlParams = new URLSearchParams(window.location.search);
-            const tab = urlParams.get('tab');
             const genreId = urlParams.get('genreId');
+            const genreName = urlParams.get('genreName');
             const personId = urlParams.get('personId');
+            const personName = urlParams.get('personName');
 
-            if (tab === 'movie') loadCategory('movie');
-            else if (tab === 'tv') loadCategory('tv');
-            else if (genreId) loadDynamic('genre', genreId, `Genre: ${urlParams.get('genreName')}`);
-            else if (personId) loadDynamic('person', personId, `Starring: ${urlParams.get('personName')}`);
-            else loadHome(); 
-
-            document.getElementById('searchInput').oninput = (e) => handleSearch(e.target.value);
-        };
-
-        function loadHome() {
-            currentMode = 'home';
-            document.getElementById('heroHeader').style.display = 'block';
-            document.getElementById('defaultContent').style.display = 'block';
-            document.getElementById('dynamicSection').style.display = 'none';
-            
-            if(document.getElementById('trendingGrid').innerHTML.includes('skeleton')) {
+            if (genreId && genreName) {
+                switchToDynamic('genre', genreId, `Genre: ${genreName}`);
+            } else if (personId && personName) {
+                switchToDynamic('person', personId, `Starring: ${personName}`);
+            } else {
                 renderSimpleList(`https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}`, 'trendingGrid', 12);
                 renderSimpleList(`https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}`, 'newGrid', 12);
             }
-        }
 
-        function loadCategory(type) {
-            currentMode = 'category';
-            activeType = type;
-            currentPage = 1;
-            
-            document.getElementById('heroHeader').style.display = 'none';
-            document.getElementById('defaultContent').style.display = 'none';
-            document.getElementById('dynamicSection').style.display = 'block';
-            document.getElementById('dynamicLabel').innerText = type === 'movie' ? 'Popular Movies' : 'Popular TV Shows';
-            document.getElementById('paginationControls').style.display = 'flex';
-            
-            fetchData();
-        }
-
-        function loadDynamic(mode, param, label) {
-            currentMode = mode;
-            activeType = param; 
-            currentPage = 1;
-            
-            document.getElementById('heroHeader').style.display = 'none';
-            document.getElementById('defaultContent').style.display = 'none';
-            document.getElementById('dynamicSection').style.display = 'block';
-            document.getElementById('dynamicLabel').innerText = label;
-            document.getElementById('paginationControls').style.display = 'flex';
-            
-            fetchData();
-        }
-
-        async function handleSearch(query) {
-            if (query.length > 2) {
-                currentMode = 'search';
-                activeType = query;
-                currentPage = 1;
-                
-                document.getElementById('defaultContent').style.display = 'none';
-                document.getElementById('dynamicSection').style.display = 'block';
-                document.getElementById('dynamicLabel').innerText = `Search: "${query}"`;
-                document.getElementById('paginationControls').style.display = 'none'; 
-                
-                const res = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${query}`);
-                const data = await res.json();
-                displayResults(data.results, 'dynamicGrid');
-            } else if (query.length === 0) {
-                loadHome();
-            }
-        }
-
-        async function fetchData() {
-            const grid = document.getElementById('dynamicGrid');
-            grid.innerHTML = Array(12).fill('<div class="skeleton"></div>').join('');
-            
-            let url = '';
-            if (currentMode === 'category') {
-                url = `https://api.themoviedb.org/3/discover/${activeType}?api_key=${API_KEY}&sort_by=popularity.desc&page=${currentPage}`;
-            } else if (currentMode === 'genre') {
-                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${activeType}&page=${currentPage}`;
-            } else if (currentMode === 'person') {
-                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_people=${activeType}&page=${currentPage}`;
-            }
-
-            const res = await fetch(url);
-            const data = await res.json();
-            displayResults(data.results, 'dynamicGrid');
-            
-            document.getElementById('pageIndicator').innerText = `Page ${currentPage}`;
-            document.getElementById('prevBtn').disabled = currentPage === 1;
-            window.scrollTo(0,0);
-        }
-
-        function changePage(step) {
-            if (currentPage + step < 1) return;
-            currentPage += step;
-            fetchData();
-        }
-
-        async function renderSimpleList(url, gridId, count) {
-            const res = await fetch(url);
-            const data = await res.json();
-            displayResults(data.results.slice(0, count), gridId);
-        }
-
-        function displayResults(items, gridId) {
-            const grid = document.getElementById(gridId);
-            grid.innerHTML = '';
-            if(items.length === 0) { grid.innerHTML = '<p style="color:#888">No results found.</p>'; return; }
-
-            items.forEach(m => {
-                if (!m.poster_path) return;
-                const type = m.media_type || (m.title ? 'movie' : 'tv');
-                const finalType = m.media_type || (m.type ? m.type : type); 
-                const year = (m.release_date || m.first_air_date || '').split('-')[0];
-                
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <div class="media-badge ${finalType === 'movie' ? '' : 'badge-tv'}">${finalType === 'movie' ? 'MOVIE' : 'SERIES'}</div>
-                    <img src="${IMG + m.poster_path}" loading="lazy">
-                    <div class="card-meta">
-                        <div style="font-weight:bold; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">${m.title || m.name}</div>
-                        <div style="color:var(--accent); font-size:0.85rem; margin-top:5px;">★ ${m.vote_average ? m.vote_average.toFixed(1) : 'N/A'} • ${year}</div>
-                    </div>
-                `;
-                // URL LINK BENAR
-                card.onclick = () => window.location.href = `/${finalType}/${m.id}`;
-                grid.appendChild(card);
-            });
-        }
+            document.getElementById('searchInput').oninput = (e) => triggerSearch(e.target.value);
+        };
 
         async function initWallpaper() {
             try {
@@ -273,21 +224,151 @@
                 createPosterRow(posters.slice(0, 7), 'row-left');
                 createPosterRow(posters.slice(7, 14), 'row-right');
                 createPosterRow(posters.slice(14, 20), 'row-left');
-            } catch(e) {}
+            } catch(e) { console.log("Bg error", e); }
         }
+
         function createPosterRow(images, animClass) {
             const container = document.getElementById('posterBg');
             const row = document.createElement('div');
             row.className = `poster-row ${animClass}`;
-            [...images, ...images, ...images].forEach(src => {
-                const img = document.createElement('img'); img.src = src; row.appendChild(img);
+            const loopImages = [...images, ...images, ...images, ...images]; 
+            loopImages.forEach(src => {
+                const img = document.createElement('img');
+                img.src = src;
+                row.appendChild(img);
             });
             container.appendChild(row);
         }
-        function updateWatchlistCount() {
-            const list = JSON.parse(localStorage.getItem('watchlist') || '[]');
-            document.getElementById('navCount').innerText = list.length;
+
+        // NEW FUNCTION: Handle Navbar Links
+        function loadCategory(type) {
+            currentType = 'discover';
+            activeMedia = type; // 'movie' or 'tv'
+            currentParam = ''; 
+            
+            document.getElementById('defaultContent').style.display = 'none';
+            document.getElementById('dynamicSection').style.display = 'block';
+            document.getElementById('heroHeader').style.display = 'none'; 
+            document.getElementById('dynamicLabel').innerText = type === 'movie' ? "Popular Movies" : "Popular TV Shows";
+            
+            currentPage = 1;
+            fetch24Results();
         }
+
+        function switchToDynamic(type, param, label) {
+            currentType = type;
+            currentParam = param;
+            activeMedia = 'movie';
+            document.getElementById('defaultContent').style.display = 'none';
+            document.getElementById('dynamicSection').style.display = 'block';
+            document.getElementById('dynamicLabel').innerText = label;
+            document.getElementById('heroHeader').style.display = 'none'; 
+            fetch24Results();
+        }
+
+        function triggerSearch(q) {
+            currentQuery = q;
+            if (currentQuery.length > 2) {
+                currentType = 'search'; currentPage = 1;
+                document.getElementById('defaultContent').style.display = 'none';
+                document.getElementById('dynamicSection').style.display = 'block';
+                document.getElementById('heroHeader').style.display = 'block';
+                document.getElementById('dynamicLabel').innerText = `Search: "${currentQuery}"`;
+                fetch24Results();
+            } else if (currentQuery.length === 0) {
+                window.location.href = '/';
+            }
+        }
+
+        function loadWatchlist() {
+            const list = JSON.parse(localStorage.getItem('watchlist') || '[]');
+            document.getElementById('defaultContent').style.display = 'none';
+            document.getElementById('heroHeader').style.display = 'none';
+            document.getElementById('dynamicSection').style.display = 'block';
+            document.getElementById('dynamicLabel').innerText = "My Watchlist";
+            document.getElementById('totalCountDisplay').innerText = `(${list.length} items)`;
+            document.getElementById('paginationControls').style.display = 'none';
+            displayResults(list, 'dynamicGrid');
+        }
+
+        function updateWatchlistCount() {
+             const list = JSON.parse(localStorage.getItem('watchlist') || '[]');
+             document.getElementById('listCount').innerText = list.length;
+        }
+
+        async function renderSimpleList(url, gridId, count) {
+            const res = await fetch(url);
+            const data = await res.json();
+            displayResults(data.results.slice(0, count), gridId);
+        }
+
+        async function fetch24Results() {
+            const grid = document.getElementById('dynamicGrid');
+            grid.innerHTML = Array(24).fill('<div class="skeleton"></div>').join('');
+
+            let baseUrl;
+            if (currentType === 'search') {
+                baseUrl = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${currentQuery}`;
+            } else if (currentType === 'genre') {
+                baseUrl = `https://api.themoviedb.org/3/discover/${activeMedia}?api_key=${API_KEY}&with_genres=${currentParam}`;
+            } else if (currentType === 'person') {
+                baseUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_people=${currentParam}`;
+            } else if (currentType === 'discover') {
+                // NEW: Discover popular logic
+                baseUrl = `https://api.themoviedb.org/3/discover/${activeMedia}?api_key=${API_KEY}&sort_by=popularity.desc`;
+            }
+
+            const startItem = (currentPage - 1) * 24;
+            const tmdbPage1 = Math.floor(startItem / 20) + 1;
+            const tmdbPage2 = tmdbPage1 + 1;
+
+            const [res1, res2] = await Promise.all([fetch(`${baseUrl}&page=${tmdbPage1}`), fetch(`${baseUrl}&page=${tmdbPage2}`)]);
+            const data1 = await res1.json();
+            const data2 = await res2.json();
+            
+            const totalResults = data1.total_results || 0;
+            document.getElementById('totalCountDisplay').innerText = `(${totalResults.toLocaleString()} titles)`;
+            
+            let combined = [...(data1.results || []), ...(data2.results || [])];
+            const final24 = combined.slice(startItem % 20, (startItem % 20) + 24);
+
+            displayResults(final24, 'dynamicGrid');
+            document.getElementById('paginationControls').style.display = 'flex';
+            document.getElementById('pageIndicator').innerText = `Page ${currentPage}`;
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = (currentPage * 24) >= totalResults;
+        }
+
+        function displayResults(items, gridId) {
+            const grid = document.getElementById(gridId);
+            grid.innerHTML = '';
+            
+            if(items.length === 0) {
+                grid.innerHTML = '<p style="color:var(--sub-text)">No results found.</p>';
+                return;
+            }
+
+            items.forEach(m => {
+                if (!m.poster_path) return;
+                const type = m.media_type || (m.title ? 'movie' : 'tv'); 
+                const finalType = m.media_type || (m.type ? m.type : type); 
+                
+                const year = (m.release_date || m.first_air_date || '').split('-')[0];
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="media-badge ${finalType === 'movie' ? 'badge-movie' : 'badge-tv'}">${finalType === 'movie' ? 'Movie' : 'Series'}</div>
+                    <img src="${IMG + m.poster_path}" loading="lazy">
+                    <div class="card-meta">
+                        <div style="font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">${m.title || m.name} <span style="color:var(--sub-text); font-weight:400; font-size:0.8rem;">(${year})</span></div>
+                        <div style="color:var(--accent); margin-top:5px">★ ${m.vote_average ? m.vote_average.toFixed(1) : 'N/A'}</div>
+                    </div>
+                `;
+                card.onclick = () => window.location.href = `/${finalType}/${m.id}`;
+                grid.appendChild(card);
+            });
+        }
+        function changePage(step) { currentPage += step; fetch24Results(); }
     </script>
 </body>
 </html>
