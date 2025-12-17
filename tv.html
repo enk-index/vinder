@@ -1,0 +1,52 @@
+<script>
+        const API_KEY = 'a820f2b45d233c0cc0c97d078536074f';
+        const IMG = 'https://image.tmdb.org/t/p/original';
+        let page = 1;
+
+        window.onload = () => {
+            fetchTV(); // Ganti nama fungsi
+            updateWatchlistCount();
+        };
+
+        async function fetchTV() {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '<p style="color:#888">Loading...</p>';
+            
+            // GANTI ENDPOINT KE TV
+            const res = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&sort_by=popularity.desc&page=${page}`);
+            const data = await res.json();
+            
+            grid.innerHTML = '';
+            data.results.forEach(m => {
+                if(!m.poster_path) return;
+                const year = (m.first_air_date || '').split('-')[0]; // TV pakai first_air_date
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="media-badge" style="background:#0070f3">SERIES</div>
+                    <img src="${IMG + m.poster_path}">
+                    <div class="card-meta">
+                        <div style="font-weight:bold; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">${m.name}</div> <div style="color:var(--accent); font-size:0.85rem; margin-top:5px;">★ ${m.vote_average.toFixed(1)} • ${year}</div>
+                    </div>
+                `;
+                // Link ke detail TV
+                card.onclick = () => window.location.href = `/tv/${m.id}`;
+                grid.appendChild(card);
+            });
+
+            document.getElementById('pageIndicator').innerText = `Page ${page}`;
+            document.getElementById('prevBtn').disabled = page === 1;
+            window.scrollTo(0,0);
+        }
+
+        function changePage(step) {
+            if(page + step < 1) return;
+            page += step;
+            fetchTV();
+        }
+
+        function updateWatchlistCount() {
+            const list = JSON.parse(localStorage.getItem('watchlist') || '[]');
+            document.getElementById('navCount').innerText = list.length;
+        }
+    </script>
