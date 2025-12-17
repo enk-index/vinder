@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamFinder Pro | Detail</title>
+    <title>Releasemap | Detail</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
         /* CSS SAMA DENGAN SEBELUMNYA */
@@ -136,7 +136,7 @@
     <footer>
         <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
             <div class="logo" onclick="window.location.href='/'">STREAM<span>FINDER</span></div>
-            <div style="color: var(--sub-text); font-size: 0.9rem;">© 2025 StreamFinder. Data by TMDB.</div>
+            <div style="color: var(--sub-text); font-size: 0.9rem;">© 2025 Releasemap. Data by TMDB.</div>
         </div>
     </footer>
 
@@ -330,7 +330,7 @@
 
         async function shareMovie(title, url) {
             if (navigator.share) {
-                try { await navigator.share({ title: 'Watch ' + title, text: 'Check out on StreamFinder:', url: url }); } catch (err) {}
+                try { await navigator.share({ title: 'Watch ' + title, text: 'Check out on Releasemap:', url: url }); } catch (err) {}
             } else {
                 navigator.clipboard.writeText(url);
                 alert('Link copied to clipboard!');
