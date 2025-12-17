@@ -47,12 +47,16 @@
         .cast-item img { width: 70px; height: 70px; object-fit: cover; border-radius: 50%; border: 2px solid var(--border); transition: 0.3s; }
         .cast-item:hover img { border-color: var(--accent); }
 
-        /* SEASONS & RECOMMENDATIONS */
+        /* SEASONS (UPDATED - SMALLER) */
         .section-header { margin: 40px 0 20px; font-size: 1.3rem; border-left: 4px solid var(--accent); padding-left: 15px; }
-        .season-list { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; }
-        .season-card { min-width: 140px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; border: 1px solid var(--border); text-align: center; }
-        .season-card img { width: 100%; border-radius: 6px; aspect-ratio: 2/3; object-fit: cover; margin-bottom: 10px; }
+        .season-list { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 15px; }
+        /* Reduced min-width and padding */
+        .season-card { min-width: 130px; width: 130px; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 10px; border: 1px solid var(--border); text-align: center; }
+        .season-card img { width: 100%; border-radius: 6px; aspect-ratio: 2/3; object-fit: cover; margin-bottom: 8px; }
+        .season-title { font-size: 0.8rem; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .season-ep { font-size: 0.7rem; color: var(--sub-text); margin-top: 3px; }
         
+        /* RECOMMENDATIONS */
         .rec-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
         .rec-card { cursor: pointer; transition: 0.3s; }
         .rec-card:hover { transform: scale(1.05); }
@@ -262,8 +266,8 @@
                     const seasonsHtml = m.seasons.filter(s => s.poster_path && s.season_number > 0).map(s => `
                         <div class="season-card">
                             <img src="${IMG + s.poster_path}">
-                            <div style="font-size:0.9rem; font-weight:bold;">${s.name}</div>
-                            <div style="font-size:0.8rem; color:var(--sub-text);">${s.episode_count} Eps</div>
+                            <div class="season-title">${s.name}</div>
+                            <div class="season-ep">${s.episode_count} Eps</div>
                         </div>
                     `).join('');
                     if (seasonsHtml) {
@@ -271,8 +275,8 @@
                     }
                 }
 
-                // RENDER RECOMMENDATIONS
-                const recsHtml = recommendations.results.slice(0, 10).map(r => {
+                // RENDER RECOMMENDATIONS (LIMITED TO 7)
+                const recsHtml = recommendations.results.slice(0, 7).map(r => {
                     if(!r.poster_path) return '';
                     return `
                         <div class="rec-card" onclick="window.location.href='/${type}/${r.id}'">
