@@ -11,51 +11,31 @@
         body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
         .container { max-width: 1300px; margin: 0 auto; padding: 0 20px; width: 100%; position: relative; z-index: 2; }
         
-        /* --- DYNAMIC WALLPAPER (DIPERBAIKI) --- */
+        /* --- DYNAMIC WALLPAPER --- */
         .poster-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
             z-index: 0; overflow: hidden; pointer-events: none;
             display: flex; flex-direction: column; justify-content: center; gap: 20px;
-            
-            /* UPDATED: Lebih terang & Jelas */
-            opacity: 0.6; 
-            filter: brightness(0.8) grayscale(30%); 
+            opacity: 0.6; filter: brightness(0.8) grayscale(30%); 
         }
-        .poster-row {
-            display: flex; gap: 20px; width: 200%;
-            flex-shrink: 0;
-        }
-        .poster-row img {
-            width: 180px; border-radius: 10px; aspect-ratio: 2/3; object-fit: cover;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-        }
-        /* Animasi Scrolling */
+        .poster-row { display: flex; gap: 20px; width: 200%; flex-shrink: 0; }
+        .poster-row img { width: 180px; border-radius: 10px; aspect-ratio: 2/3; object-fit: cover; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .row-left { animation: scrollLeft 60s linear infinite; }
         .row-right { animation: scrollRight 60s linear infinite; transform: translateX(-50%); }
-
         @keyframes scrollLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes scrollRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
-
-        /* UPDATED: Overlay lebih transparan di tengah */
         .bg-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            /* Bagian tengah (0%) transparan (0.2), pinggir (100%) gelap pekat (1) */
             background: radial-gradient(circle at center, rgba(5,5,8,0.2) 0%, rgba(5,5,8,0.95) 85%, rgba(5,5,8,1) 100%);
             z-index: 1; pointer-events: none;
         }
 
         /* --- NAVBAR --- */
-        nav.main-nav {
-            position: sticky; top: 0; z-index: 1000;
-            padding: 15px 0; transition: 0.4s;
-            background: transparent;
-        }
+        nav.main-nav { position: sticky; top: 0; z-index: 1000; padding: 15px 0; transition: 0.4s; background: transparent; }
         nav.main-nav.scrolled { background: var(--glass); border-bottom: 1px solid var(--border); backdrop-filter: blur(15px); }
-
         .nav-container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.6rem; font-weight: 900; text-decoration: none; color: #fff; letter-spacing: -1.5px; cursor: pointer; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
         .logo span { color: var(--accent); }
-
         .nav-menu { display: flex; gap: 25px; align-items: center; }
         .nav-item { color: #ddd; text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: 0.3s; cursor: pointer; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
         .nav-item:hover { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
@@ -63,12 +43,8 @@
 
         /* HERO */
         .hero-header { padding: 120px 0 80px; text-align: center; position: relative; z-index: 2; }
-        .hero-title { font-size: clamp(3.5rem, 8vw, 6rem); font-weight: 900; margin: 0; line-height: 0.95; 
-            color: #fff; 
-            text-shadow: 0 10px 40px rgba(0,0,0,0.8); /* Shadow kuat agar teks kebaca di atas poster */
-        }
+        .hero-title { font-size: clamp(3.5rem, 8vw, 6rem); font-weight: 900; margin: 0; line-height: 0.95; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.8); }
         .hero-subtitle { color: #ddd; font-size: 1.1rem; margin-top: 15px; margin-bottom: 40px; font-weight: 500; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
-        
         #searchInput { width: 100%; padding: 25px 40px; border-radius: 100px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.6); color: #fff; font-size: 1.2rem; outline: none; transition: 0.4s; backdrop-filter: blur(20px); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); }
         #searchInput:focus { border-color: var(--accent); transform: scale(1.02); background: rgba(0, 0, 0, 0.8); }
 
@@ -87,7 +63,7 @@
         .pg-btn { background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid var(--border); padding: 10px 25px; border-radius: 30px; cursor: pointer; font-weight: bold; }
         .pg-btn:hover:not(:disabled) { background: var(--accent); }
 
-        /* SKELETON LOADING */
+        /* SKELETON */
         .skeleton { background: rgba(255,255,255,0.05); position: relative; overflow: hidden; border-radius: 12px; aspect-ratio: 2/3; }
         .skeleton::after { content: ""; position: absolute; top: 0; right: 0; bottom: 0; left: 0; transform: translateX(-100%); background-image: linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.05) 20%, rgba(255, 255, 255, 0.1) 60%, rgba(255, 255, 255, 0)); animation: shimmer 1.5s infinite; }
         @keyframes shimmer { 100% { transform: translateX(100%); } }
@@ -119,8 +95,8 @@
             <a href="/" class="logo">STREAM<span>FINDER</span></a>
             <div class="nav-menu">
                 <a href="/" class="nav-item">Home</a>
-                <a onclick="alert('Use search to find movies!')" class="nav-item">Movies</a>
-                <a onclick="alert('Use search to find series!')" class="nav-item">TV Shows</a>
+                <a onclick="loadCategory('movie')" class="nav-item">Movies</a>
+                <a onclick="loadCategory('tv')" class="nav-item">TV Shows</a>
                 <a onclick="loadWatchlist()" class="nav-item">My List <span class="list-badge" id="listCount">0</span></a>
             </div>
         </div>
@@ -173,8 +149,8 @@
                 <div class="footer-col">
                     <h4>Discover</h4>
                     <a href="/">Home</a>
-                    <a href="/">Trending Now</a>
-                    <a href="/">New Releases</a>
+                    <a onclick="loadCategory('movie')">Movies</a>
+                    <a onclick="loadCategory('tv')">TV Shows</a>
                     <a href="/">Top Rated</a>
                 </div>
                 <div class="footer-col">
@@ -203,7 +179,7 @@
     <script>
         const API_KEY = 'a820f2b45d233c0cc0c97d078536074f';
         const IMG = 'https://image.tmdb.org/t/p/original';
-        const SMALL_IMG = 'https://image.tmdb.org/t/p/w200'; // Smaller img for background
+        const SMALL_IMG = 'https://image.tmdb.org/t/p/w200'; 
         
         let currentType = 'search'; 
         let currentQuery = ''; 
@@ -220,11 +196,8 @@
 
         window.onload = () => {
             updateWatchlistCount();
-            
-            // 1. SETUP BACKGROUND WALLPAPER (Fetch Data)
             initWallpaper();
 
-            // 2. CEK URL PARAMETER
             const urlParams = new URLSearchParams(window.location.search);
             const genreId = urlParams.get('genreId');
             const genreName = urlParams.get('genreName');
@@ -236,7 +209,6 @@
             } else if (personId && personName) {
                 switchToDynamic('person', personId, `Starring: ${personName}`);
             } else {
-                // Mode Default
                 renderSimpleList(`https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}`, 'trendingGrid', 12);
                 renderSimpleList(`https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}`, 'newGrid', 12);
             }
@@ -244,15 +216,11 @@
             document.getElementById('searchInput').oninput = (e) => triggerSearch(e.target.value);
         };
 
-        // --- WALLPAPER LOGIC ---
         async function initWallpaper() {
             try {
-                // Fetch trending movies for background
                 const res = await fetch(`https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}`);
                 const data = await res.json();
                 const posters = data.results.filter(m => m.poster_path).map(m => SMALL_IMG + m.poster_path);
-                
-                // Buat 3 Baris
                 createPosterRow(posters.slice(0, 7), 'row-left');
                 createPosterRow(posters.slice(7, 14), 'row-right');
                 createPosterRow(posters.slice(14, 20), 'row-left');
@@ -263,10 +231,7 @@
             const container = document.getElementById('posterBg');
             const row = document.createElement('div');
             row.className = `poster-row ${animClass}`;
-            
-            // Duplicate images to create seamless loop effect
             const loopImages = [...images, ...images, ...images, ...images]; 
-            
             loopImages.forEach(src => {
                 const img = document.createElement('img');
                 img.src = src;
@@ -275,7 +240,21 @@
             container.appendChild(row);
         }
 
-        // --- EXISTING LOGIC ---
+        // NEW FUNCTION: Handle Navbar Links
+        function loadCategory(type) {
+            currentType = 'discover';
+            activeMedia = type; // 'movie' or 'tv'
+            currentParam = ''; 
+            
+            document.getElementById('defaultContent').style.display = 'none';
+            document.getElementById('dynamicSection').style.display = 'block';
+            document.getElementById('heroHeader').style.display = 'none'; 
+            document.getElementById('dynamicLabel').innerText = type === 'movie' ? "Popular Movies" : "Popular TV Shows";
+            
+            currentPage = 1;
+            fetch24Results();
+        }
+
         function switchToDynamic(type, param, label) {
             currentType = type;
             currentParam = param;
@@ -334,6 +313,9 @@
                 baseUrl = `https://api.themoviedb.org/3/discover/${activeMedia}?api_key=${API_KEY}&with_genres=${currentParam}`;
             } else if (currentType === 'person') {
                 baseUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_people=${currentParam}`;
+            } else if (currentType === 'discover') {
+                // NEW: Discover popular logic
+                baseUrl = `https://api.themoviedb.org/3/discover/${activeMedia}?api_key=${API_KEY}&sort_by=popularity.desc`;
             }
 
             const startItem = (currentPage - 1) * 24;
