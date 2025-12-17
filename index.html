@@ -11,21 +11,23 @@
         body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
         .container { max-width: 1300px; margin: 0 auto; padding: 0 20px; width: 100%; position: relative; z-index: 2; }
         
-        /* --- DYNAMIC WALLPAPER --- */
+        /* --- DYNAMIC WALLPAPER (DIPERBAIKI) --- */
         .poster-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
             z-index: 0; overflow: hidden; pointer-events: none;
             display: flex; flex-direction: column; justify-content: center; gap: 20px;
-            opacity: 0.3; /* Transparansi agar tidak mengganggu konten */
-            filter: grayscale(40%) sepia(20%); /* Efek warna sinematik */
+            
+            /* UPDATED: Lebih terang & Jelas */
+            opacity: 0.6; 
+            filter: brightness(0.8) grayscale(30%); 
         }
         .poster-row {
-            display: flex; gap: 20px; width: 200%; /* Lebih lebar agar bisa scrolling */
+            display: flex; gap: 20px; width: 200%;
             flex-shrink: 0;
         }
         .poster-row img {
             width: 180px; border-radius: 10px; aspect-ratio: 2/3; object-fit: cover;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); opacity: 0.8;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
         }
         /* Animasi Scrolling */
         .row-left { animation: scrollLeft 60s linear infinite; }
@@ -34,10 +36,11 @@
         @keyframes scrollLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes scrollRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
 
-        /* Overlay Gradien agar teks terbaca */
+        /* UPDATED: Overlay lebih transparan di tengah */
         .bg-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background: radial-gradient(circle at center, rgba(5,5,8,0.85) 0%, rgba(5,5,8,1) 90%);
+            /* Bagian tengah (0%) transparan (0.2), pinggir (100%) gelap pekat (1) */
+            background: radial-gradient(circle at center, rgba(5,5,8,0.2) 0%, rgba(5,5,8,0.95) 85%, rgba(5,5,8,1) 100%);
             z-index: 1; pointer-events: none;
         }
 
@@ -50,24 +53,24 @@
         nav.main-nav.scrolled { background: var(--glass); border-bottom: 1px solid var(--border); backdrop-filter: blur(15px); }
 
         .nav-container { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.6rem; font-weight: 900; text-decoration: none; color: #fff; letter-spacing: -1.5px; cursor: pointer; }
+        .logo { font-size: 1.6rem; font-weight: 900; text-decoration: none; color: #fff; letter-spacing: -1.5px; cursor: pointer; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
         .logo span { color: var(--accent); }
 
         .nav-menu { display: flex; gap: 25px; align-items: center; }
-        .nav-item { color: var(--sub-text); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: 0.3s; cursor: pointer; }
-        .nav-item:hover { color: #fff; }
+        .nav-item { color: #ddd; text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: 0.3s; cursor: pointer; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
+        .nav-item:hover { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
         .list-badge { background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-left: 5px; vertical-align: middle; }
 
         /* HERO */
         .hero-header { padding: 120px 0 80px; text-align: center; position: relative; z-index: 2; }
         .hero-title { font-size: clamp(3.5rem, 8vw, 6rem); font-weight: 900; margin: 0; line-height: 0.95; 
-            background: linear-gradient(to bottom, #fff 30%, #999 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            color: #fff; 
+            text-shadow: 0 10px 40px rgba(0,0,0,0.8); /* Shadow kuat agar teks kebaca di atas poster */
         }
-        .hero-subtitle { color: var(--sub-text); font-size: 1.1rem; margin-top: 15px; margin-bottom: 40px; font-weight: 400; }
+        .hero-subtitle { color: #ddd; font-size: 1.1rem; margin-top: 15px; margin-bottom: 40px; font-weight: 500; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
         
-        #searchInput { width: 100%; padding: 25px 40px; border-radius: 100px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(20, 20, 25, 0.6); color: #fff; font-size: 1.2rem; outline: none; transition: 0.4s; backdrop-filter: blur(15px); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); }
-        #searchInput:focus { border-color: var(--accent); transform: scale(1.02); background: rgba(20, 20, 25, 0.9); }
+        #searchInput { width: 100%; padding: 25px 40px; border-radius: 100px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.6); color: #fff; font-size: 1.2rem; outline: none; transition: 0.4s; backdrop-filter: blur(20px); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); }
+        #searchInput:focus { border-color: var(--accent); transform: scale(1.02); background: rgba(0, 0, 0, 0.8); }
 
         /* GRID & CARD */
         .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; margin-bottom: 40px; }
@@ -147,11 +150,11 @@
         </div>
 
         <div id="defaultContent">
-            <h2 style="border-left: 4px solid var(--accent); padding-left: 15px; margin-bottom: 30px; font-size: 1.5rem;">Trending Now</h2>
+            <h2 style="border-left: 4px solid var(--accent); padding-left: 15px; margin-bottom: 30px; font-size: 1.5rem; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Trending Now</h2>
             <div id="trendingGrid" class="movie-grid">
                 <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
             </div>
-            <h2 style="border-left: 4px solid var(--accent); padding-left: 15px; margin: 50px 0 30px; font-size: 1.5rem;">Now Playing</h2>
+            <h2 style="border-left: 4px solid var(--accent); padding-left: 15px; margin: 50px 0 30px; font-size: 1.5rem; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Now Playing</h2>
             <div id="newGrid" class="movie-grid">
                  <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
             </div>
