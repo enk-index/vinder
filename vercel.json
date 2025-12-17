@@ -3,11 +3,11 @@
   "trailingSlash": true,
   "rewrites": [
     {
-      "source": "/movie/:id",
+      "source": "/movie/:path*",
       "destination": "/detail.html"
     },
     {
-      "source": "/tv/:id",
+      "source": "/tv/:path*",
       "destination": "/detail.html"
     }
   ]
