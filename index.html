@@ -190,7 +190,7 @@
                     </div>
                 `;
                 // Pindah halaman ke detail
-                card.onclick = () => window.location.href = `detail.html?id=${m.id}&type=${type}`;
+                card.onclick = () => window.location.href = `/${type}/${m.id}`;
                 grid.appendChild(card);
             });
         }
