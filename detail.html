@@ -32,14 +32,16 @@
         .genre-pill { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--border); padding: 8px 18px; border-radius: 30px; font-size: 0.85rem; font-weight: 600; margin-right: 10px; margin-bottom: 10px; display: inline-block; cursor: pointer; transition: 0.3s; }
         .genre-pill:hover { background: var(--accent); border-color: white; }
 
-        /* BUTTONS (Trailer & Watchlist) */
+        /* BUTTONS (Trailer & Share) */
         .action-buttons { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
         .btn-action { padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; border: none; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
+        
         .btn-trailer { background: #fff; color: #000; }
         .btn-trailer:hover { background: #ddd; }
-        .btn-watchlist { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid var(--border); }
-        .btn-watchlist:hover { background: var(--accent); border-color: var(--accent); }
-        .btn-watchlist.active { background: var(--accent); border-color: var(--accent); }
+        
+        /* New Share Button Style */
+        .btn-share { background: transparent; color: var(--sub-text); border: 1px solid var(--border); }
+        .btn-share:hover { background: rgba(255,255,255,0.1); color: #fff; border-color: #fff; }
 
         /* CAST ITEM - CLICKABLE */
         .cast-item { display: inline-block; margin-right: 15px; text-align: center; width: 80px; cursor: pointer; transition: 0.3s; }
@@ -47,11 +49,10 @@
         .cast-item img { width: 70px; height: 70px; object-fit: cover; border-radius: 50%; border: 2px solid var(--border); transition: 0.3s; }
         .cast-item:hover img { border-color: var(--accent); }
 
-        /* S (UPDATED - SMALLER) */
+        /* SEASONS (SMALLER) */
         .section-header { margin: 40px 0 20px; font-size: 1.3rem; border-left: 4px solid var(--accent); padding-left: 15px; }
         .season-list { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 15px; }
-        /* Reduced min-width and padding */
-        .season-card { min-width: 200px; width: 200px; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 10px; border: 1px solid var(--border); text-align: center; }
+        .season-card { min-width: 100px; width: 100px; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 10px; border: 1px solid var(--border); text-align: center; }
         .season-card img { width: 100%; border-radius: 6px; aspect-ratio: 2/3; object-fit: cover; margin-bottom: 8px; }
         .season-title { font-size: 0.8rem; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .season-ep { font-size: 0.7rem; color: var(--sub-text); margin-top: 3px; }
@@ -222,11 +223,6 @@
                     </div>
                 `).join('');
 
-                // WATCHLIST STATE
-                const isSaved = checkWatchlist(m.id);
-                const watchlistBtnText = isSaved ? 'Remove from List' : 'Add to List';
-                const watchlistBtnClass = isSaved ? 'btn-watchlist active' : 'btn-watchlist';
-
                 // RENDER HERO
                 const runtime = type === 'movie' ? (m.runtime ? `${Math.floor(m.runtime / 60)}h ${m.runtime % 60}m` : '') : '';
                 const episodeCount = type === 'tv' ? (m.number_of_episodes ? `${m.number_of_episodes} Episodes` : '') : '';
@@ -240,8 +236,8 @@
                         
                         <div class="action-buttons">
                             ${trailerKey ? `<button class="btn-action btn-trailer" onclick="playTrailer('${trailerKey}')">▶ Watch Trailer</button>` : ''}
-                            <button id="wlBtn" class="btn-action ${watchlistBtnClass}" onclick="toggleWatchlist('${m.id}', '${type}', '${m.poster_path}', '${escapeHtml(m.title || m.name)}', '${m.vote_average}')">
-                                ${isSaved ? '✓' : '+'} ${watchlistBtnText}
+                            <button class="btn-action btn-share" onclick="shareMovie('${escapeHtml(m.title || m.name)}', window.location.href)">
+                                ➦ Share
                             </button>
                         </div>
 
@@ -348,36 +344,26 @@
             document.getElementById('youtubeFrame').src = '';
         }
 
-        // --- WATCHLIST LOGIC ---
-        function checkWatchlist(id) {
-            const list = JSON.parse(localStorage.getItem('watchlist') || '[]');
-            return list.some(item => item.id == id);
-        }
-
-        function toggleWatchlist(id, type, poster, title, vote) {
-            let list = JSON.parse(localStorage.getItem('watchlist') || '[]');
-            const index = list.findIndex(item => item.id == id);
-            const btn = document.getElementById('wlBtn');
-
-            if (index === -1) {
-                // Add
-                list.push({ id, type, poster_path: poster, title: unescapeHtml(title), vote_average: parseFloat(vote) });
-                btn.innerHTML = '✓ Remove from List';
-                btn.classList.add('active');
+        // --- SHARE LOGIC ---
+        async function shareMovie(title, url) {
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'Watch ' + title,
+                        text: 'Check out this movie on StreamFinder:',
+                        url: url
+                    });
+                } catch (err) {
+                    console.log('Error sharing:', err);
+                }
             } else {
-                // Remove
-                list.splice(index, 1);
-                btn.innerHTML = '+ Add to List';
-                btn.classList.remove('active');
+                navigator.clipboard.writeText(url);
+                alert('Link copied to clipboard!');
             }
-            localStorage.setItem('watchlist', JSON.stringify(list));
         }
 
         function escapeHtml(text) {
             return text.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-        }
-        function unescapeHtml(text) {
-             return text.replace(/&apos;/g, "'").replace(/&quot;/g, '"');
         }
     </script>
 </body>
