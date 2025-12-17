@@ -49,7 +49,7 @@
 
     <nav class="main-nav">
         <div class="container nav-container">
-            <a href="index.html" class="logo">STREAM<span>FINDER</span></a>
+            <a href="/" class="logo">STREAM<span>FINDER</span></a>
             <div style="font-size: 0.8rem; color: var(--sub-text); font-weight: 600; letter-spacing: 1px;">GLOBAL RELEASE TRACKER</div>
         </div>
     </nav>
@@ -57,7 +57,8 @@
     <main class="container">
         <div id="bgCanvas" class="full-backdrop"></div>
         <div class="full-overlay"></div>
-        <a href="index.html" class="btn-back">← Back to Home</a>
+        
+        <a href="/" class="btn-back">← Back to Home</a>
         
         <div id="detailHero" class="detail-wrapper">
             <p style="color: var(--sub-text);">Loading details...</p>
@@ -71,7 +72,7 @@
 
     <footer>
         <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
-            <div class="logo" onclick="window.location.href='index.html'">STREAM<span>FINDER</span></div>
+            <div class="logo" onclick="window.location.href='/'">STREAM<span>FINDER</span></div>
             <div style="color: var(--sub-text); font-size: 0.9rem;">© 2025 StreamFinder. Data by TMDB.</div>
         </div>
     </footer>
@@ -82,14 +83,27 @@
         const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
 
         window.onload = async () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const id = urlParams.get('id');
-            const type = urlParams.get('type');
+            // --- LOGIKA BARU UNTUK MEMBACA URL PATH ---
+            const path = window.location.pathname; // Contoh: "/movie/1223601"
+            const parts = path.split('/').filter(part => part); // Menjadi ["movie", "1223601"]
 
+            // Ambil type dan id dari path (asumsi urutan /type/id)
+            let type = (parts[0] === 'movie' || parts[0] === 'tv') ? parts[0] : null; 
+            let id = parts[1];
+
+            // Fallback: Jika dibuka manual via detail.html?id=... (Dev mode)
             if (!id || !type) {
-                window.location.href = 'index.html';
+                const urlParams = new URLSearchParams(window.location.search);
+                id = urlParams.get('id');
+                type = urlParams.get('type');
+            }
+
+            // Jika tetap gagal, kembali ke home
+            if (!id || !type) {
+                window.location.href = '/';
                 return;
             }
+            // ------------------------------------------
 
             try {
                 const [dRes, pRes, cRes] = await Promise.all([
@@ -106,9 +120,9 @@
 
                 const year = (m.release_date || m.first_air_date || '').split('-')[0];
                 
-                // UPDATE GENRE: Menambahkan onclick yang mengarah ke index.html dengan parameter
+                // UPDATE GENRE: Link ke root dengan query params
                 const genresHtml = (m.genres || []).map(g => 
-                    `<span class="genre-pill" onclick="window.location.href='index.html?genreId=${g.id}&genreName=${encodeURIComponent(g.name)}'">${g.name}</span>`
+                    `<span class="genre-pill" onclick="window.location.href='/?genreId=${g.id}&genreName=${encodeURIComponent(g.name)}'">${g.name}</span>`
                 ).join('');
                 
                 const tagline = m.tagline ? `<p style="font-style: italic; color: var(--sub-text); margin: 0 0 20px 0;">"${m.tagline}"</p>` : '';
