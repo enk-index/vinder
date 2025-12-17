@@ -6,87 +6,63 @@
     <title>StreamFinder Pro | Detail</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
+        /* CSS SAMA DENGAN SEBELUMNYA */
         :root { --bg: #050508; --accent: #e50914; --text: #ffffff; --sub-text: #b3b3b3; --border: rgba(255, 255, 255, 0.1); --glass: rgba(10, 10, 15, 0.9); }
         * { box-sizing: border-box; }
         body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
         .container { max-width: 1300px; margin: 0 auto; padding: 0 20px; width: 100%; }
 
-        /* --- NAVBAR --- */
-        nav.main-nav {
-            position: sticky; top: 0; z-index: 1000;
-            padding: 15px 0; transition: 0.4s;
-            background: transparent;
-        }
+        nav.main-nav { position: sticky; top: 0; z-index: 1000; padding: 15px 0; transition: 0.4s; background: transparent; }
         nav.main-nav.scrolled { background: var(--glass); border-bottom: 1px solid var(--border); backdrop-filter: blur(15px); }
-
         .nav-container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.6rem; font-weight: 900; text-decoration: none; color: #fff; letter-spacing: -1.5px; cursor: pointer; }
         .logo span { color: var(--accent); }
-
         .nav-menu { display: flex; gap: 25px; align-items: center; }
         .nav-item { color: var(--sub-text); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: 0.3s; cursor: pointer; }
-        .nav-item:hover { color: #fff; }
+        .nav-item:hover, .nav-item.active { color: #fff; }
         .list-badge { background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-left: 5px; vertical-align: middle; }
 
-        /* BACKDROP */
         .full-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-size: cover; background-position: center; z-index: -2; transition: 0.5s; opacity: 0; }
         .full-backdrop.loaded { opacity: 0.4; }
         .full-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: linear-gradient(to bottom, rgba(5,5,8,0.2) 0%, rgba(5,5,8,0.9) 60%, rgba(5,5,8,1) 90%); z-index: -1; }
-        
         .btn-back { display: inline-flex; align-items: center; background: rgba(255, 255, 255, 0.1); padding: 10px 20px; border-radius: 30px; color: #fff; border: 1px solid var(--border); cursor: pointer; margin-top: 30px; margin-bottom: 30px; backdrop-filter: blur(10px); transition: 0.3s; text-decoration: none;}
         .btn-back:hover { background: var(--accent); }
-
         .detail-wrapper { display: flex; gap: 50px; flex-wrap: wrap; align-items: flex-start; padding-bottom: 40px; }
         .detail-poster { width: 300px; flex-shrink: 0; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9); }
         .detail-info { flex: 1; min-width: 300px; padding-top: 10px; }
         .detail-title { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; margin: 0 0 15px 0; line-height: 1.1; }
-        
         .genre-pill { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--border); padding: 8px 18px; border-radius: 30px; font-size: 0.85rem; font-weight: 600; margin-right: 10px; margin-bottom: 10px; display: inline-block; cursor: pointer; transition: 0.3s; }
         .genre-pill:hover { background: var(--accent); border-color: white; }
-
-        /* BUTTONS */
         .action-buttons { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
         .btn-action { padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; border: none; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
         .btn-trailer { background: #fff; color: #000; }
         .btn-trailer:hover { background: #ddd; }
         .btn-watchlist { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid var(--border); }
-        .btn-watchlist:hover { background: var(--accent); border-color: var(--accent); }
-        .btn-watchlist.active { background: var(--accent); border-color: var(--accent); }
+        .btn-watchlist.active, .btn-watchlist:hover { background: var(--accent); border-color: var(--accent); }
         .btn-share { background: transparent; color: var(--sub-text); border: 1px solid var(--border); }
         .btn-share:hover { background: rgba(255,255,255,0.1); color: #fff; border-color: #fff; }
-
-        /* CAST & SEASONS */
         .cast-item { display: inline-block; margin-right: 15px; text-align: center; width: 80px; cursor: pointer; transition: 0.3s; }
         .cast-item:hover { transform: translateY(-5px); }
         .cast-item img { width: 70px; height: 70px; object-fit: cover; border-radius: 50%; border: 2px solid var(--border); transition: 0.3s; }
         .cast-item:hover img { border-color: var(--accent); }
-
         .section-header { margin: 40px 0 20px; font-size: 1.3rem; border-left: 4px solid var(--accent); padding-left: 15px; }
         .season-list { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 15px; }
         .season-card { min-width: 100px; width: 100px; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 10px; border: 1px solid var(--border); text-align: center; }
         .season-card img { width: 100%; border-radius: 6px; aspect-ratio: 2/3; object-fit: cover; margin-bottom: 8px; }
         .season-title { font-size: 0.8rem; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .season-ep { font-size: 0.7rem; color: var(--sub-text); margin-top: 3px; }
-        
-        /* RECOMMENDATIONS */
         .rec-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
         .rec-card { cursor: pointer; transition: 0.3s; }
         .rec-card:hover { transform: scale(1.05); }
         .rec-card img { width: 100%; border-radius: 8px; aspect-ratio: 2/3; object-fit: cover; }
-
-        /* STREAMING PROVIDERS */
         .streaming-container { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 30px; padding: 40px; margin: 40px 0 80px; }
         .p-row { display: flex; align-items: center; gap: 20px; padding: 20px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
         .p-logo { width: 55px; height: 55px; border-radius: 14px; }
         .c-badge { background: rgba(229, 9, 20, 0.1); color: var(--accent); padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; border: 1px solid rgba(229, 9, 20, 0.2); display: flex; gap: 6px; }
         .c-badge span { color: #fff; font-weight: 400; }
-
-        /* MODAL TRAILER */
         .trailer-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; }
         .video-container { position: relative; width: 85%; max-width: 900px; aspect-ratio: 16/9; }
         .close-trailer { position: absolute; top: -40px; right: 0; color: white; font-size: 30px; cursor: pointer; }
-
-        /* SKELETON & ERROR */
         .skeleton { background: #222; position: relative; overflow: hidden; border-radius: 8px; }
         .skeleton-text { height: 20px; margin-bottom: 10px; width: 60%; }
         .skeleton-title { height: 40px; width: 80%; margin-bottom: 20px; }
@@ -95,26 +71,8 @@
         @keyframes shimmer { 100% { transform: translateX(100%); } }
         .error-container { text-align: center; padding: 100px 20px; }
         .error-code { font-size: 5rem; font-weight: 900; color: var(--accent); margin: 0; }
-        
-        @media (max-width: 768px) {
-            .detail-wrapper { justify-content: center; }
-            .detail-poster { width: 250px; }
-            .detail-info { text-align: center; }
-            .action-buttons { justify-content: center; }
-            .genre-list { justify-content: center; }
-            .skeleton-poster { width: 250px; height: 375px; margin: 0 auto; }
-            .nav-menu { display: none; }
-        }
-
-        /* FOOTER */
-        footer { background: #08080a; padding: 70px 0 30px; border-top: 1px solid var(--border); margin-top: auto; }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 40px; }
-        .footer-col h4 { color: #fff; margin-bottom: 20px; font-weight: 700; }
-        .footer-col a { display: block; color: var(--sub-text); text-decoration: none; margin-bottom: 10px; font-size: 0.9rem; transition: 0.3s; }
-        .footer-col a:hover { color: var(--accent); }
-        .social-icons { display: flex; gap: 15px; }
-        .social-icon { width: 35px; height: 35px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; justify-content: center; align-items: center; transition: 0.3s; color: white; cursor: pointer;}
-        .social-icon:hover { background: var(--accent); }
+        @media (max-width: 768px) { .detail-wrapper { justify-content: center; } .detail-poster { width: 250px; } .detail-info { text-align: center; } .action-buttons { justify-content: center; } .genre-list { justify-content: center; } .skeleton-poster { width: 250px; height: 375px; margin: 0 auto; } .nav-menu { display: none; } }
+        footer { background: #08080a; padding: 60px 0 30px; border-top: 1px solid var(--border); margin-top: auto; }
     </style>
 </head>
 <body>
@@ -124,9 +82,9 @@
             <a href="/" class="logo">STREAM<span>FINDER</span></a>
             <div class="nav-menu">
                 <a href="/" class="nav-item">Home</a>
-                <a onclick="alert('Use search to find movies!')" class="nav-item">Movies</a>
-                <a onclick="alert('Use search to find series!')" class="nav-item">TV Shows</a>
-                <a href="/" class="nav-item" title="Go to Home and click My List">My List <span class="list-badge" id="navCount">0</span></a>
+                <a href="/?tab=movie" class="nav-item">Movies</a>
+                <a href="/?tab=tv" class="nav-item">TV Shows</a>
+                <a href="/watchlist" class="nav-item">My List <span class="list-badge" id="navCount">0</span></a>
             </div>
         </div>
     </nav>
@@ -149,12 +107,10 @@
 
         <div id="extraSections" style="display: none;">
             <div id="seasonsSection"></div>
-
             <div class="streaming-container">
                 <h3 style="margin-top: 0; color: var(--sub-text); font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px;">Streaming Availability</h3>
                 <div id="dProviders"></div>
             </div>
-
             <h3 class="section-header">You May Also Like</h3>
             <div id="recommendationsGrid" class="rec-list"></div>
         </div>
@@ -175,41 +131,9 @@
     </div>
 
     <footer>
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <div class="logo" style="margin-bottom: 20px;">STREAM<span>FINDER</span></div>
-                    <p style="color: var(--sub-text); font-size: 0.9rem; line-height: 1.6;">
-                        The ultimate streaming guide. Find where to watch your favorite movies and TV shows across hundreds of services worldwide.
-                    </p>
-                </div>
-                <div class="footer-col">
-                    <h4>Discover</h4>
-                    <a href="/">Home</a>
-                    <a href="/">Trending Now</a>
-                    <a href="/">New Releases</a>
-                    <a href="/">Top Rated</a>
-                </div>
-                <div class="footer-col">
-                    <h4>Company</h4>
-                    <a href="#">About Us</a>
-                    <a href="#">Contact</a>
-                    <a href="#">API</a>
-                    <a href="#">Privacy Policy</a>
-                </div>
-                <div class="footer-col">
-                    <h4>Follow Us</h4>
-                    <div class="social-icons">
-                        <div class="social-icon">𝕏</div>
-                        <div class="social-icon">📸</div>
-                        <div class="social-icon">📘</div>
-                        <div class="social-icon">🐙</div>
-                    </div>
-                </div>
-            </div>
-            <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; text-align: center; color: var(--sub-text); font-size: 0.85rem;">
-                © 2025 StreamFinder Pro. All rights reserved. Data provided by TMDB.
-            </div>
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+            <div class="logo" onclick="window.location.href='/'">STREAM<span>FINDER</span></div>
+            <div style="color: var(--sub-text); font-size: 0.9rem;">© 2025 StreamFinder. Data by TMDB.</div>
         </div>
     </footer>
 
@@ -218,16 +142,8 @@
         const IMG = 'https://image.tmdb.org/t/p/original';
         const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
 
-        // NAVBAR SCROLL EFFECT
-        window.onscroll = () => {
-            const nav = document.getElementById('navbar');
-            if (window.scrollY > 50) nav.classList.add('scrolled');
-            else nav.classList.remove('scrolled');
-        };
-
         window.onload = async () => {
-            updateNavCount(); // Update badge watchlist
-
+            updateNavCount();
             const path = window.location.pathname; 
             const parts = path.split('/').filter(part => part); 
             let type = (parts[0] === 'movie' || parts[0] === 'tv') ? parts[0] : null; 
@@ -258,12 +174,10 @@
                 const videos = await vRes.json();
                 const recommendations = await rRes.json();
 
-                // HIDE SKELETON
                 document.getElementById('skeletonLoader').style.display = 'none';
                 document.getElementById('detailHero').style.display = 'flex';
                 document.getElementById('extraSections').style.display = 'block';
 
-                // RENDER BACKDROP
                 const bg = document.getElementById('bgCanvas');
                 bg.style.backgroundImage = `url(${IMG + (m.backdrop_path || m.poster_path)})`;
                 bg.classList.add('loaded');
@@ -284,12 +198,10 @@
                     </div>
                 `).join('');
 
-                // WATCHLIST BUTTON STATE
                 const isSaved = checkWatchlist(m.id);
                 const watchlistBtnText = isSaved ? 'Remove from List' : 'Add to List';
                 const watchlistBtnClass = isSaved ? 'btn-watchlist active' : 'btn-watchlist';
 
-                // RENDER INFO
                 const runtime = type === 'movie' ? (m.runtime ? `${Math.floor(m.runtime / 60)}h ${m.runtime % 60}m` : '') : '';
                 const episodeCount = type === 'tv' ? (m.number_of_episodes ? `${m.number_of_episodes} Episodes` : '') : '';
                 const infoDuration = runtime || episodeCount || '';
@@ -326,7 +238,6 @@
                     </div>
                 `;
 
-                // RENDER SEASONS
                 if (type === 'tv' && m.seasons) {
                     const seasonsHtml = m.seasons.filter(s => s.poster_path && s.season_number > 0).map(s => `
                         <div class="season-card">
@@ -335,12 +246,9 @@
                             <div class="season-ep">${s.episode_count} Eps</div>
                         </div>
                     `).join('');
-                    if (seasonsHtml) {
-                        document.getElementById('seasonsSection').innerHTML = `<h3 class="section-header">Seasons</h3><div class="season-list">${seasonsHtml}</div>`;
-                    }
+                    if (seasonsHtml) document.getElementById('seasonsSection').innerHTML = `<h3 class="section-header">Seasons</h3><div class="season-list">${seasonsHtml}</div>`;
                 }
 
-                // RENDER RECS
                 const recsHtml = recommendations.results.slice(0, 7).map(r => {
                     if(!r.poster_path) return '';
                     return `
@@ -352,7 +260,6 @@
                 }).join('');
                 document.getElementById('recommendationsGrid').innerHTML = recsHtml || '<p style="color:var(--sub-text)">No recommendations available.</p>';
 
-                // RENDER GLOBAL PROVIDERS
                 renderProviders(providers.results || {});
 
             } catch (e) {
@@ -366,7 +273,6 @@
             document.getElementById('errorContainer').style.display = 'block';
         }
 
-        // PROVIDERS RENDERER (GLOBAL)
         function renderProviders(results) {
             const pList = document.getElementById('dProviders');
             pList.innerHTML = '';
