@@ -21,7 +21,6 @@
         @keyframes scrollRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
         .bg-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: radial-gradient(circle at center, rgba(5,5,8,0.2) 0%, rgba(5,5,8,0.95) 85%, rgba(5,5,8,1) 100%); z-index: 1; pointer-events: none; }
 
-        /* NAV */
         nav.main-nav { position: sticky; top: 0; z-index: 1000; padding: 15px 0; transition: 0.4s; background: transparent; }
         nav.main-nav.scrolled { background: var(--glass); border-bottom: 1px solid var(--border); backdrop-filter: blur(15px); }
         .nav-container { display: flex; justify-content: space-between; align-items: center; }
@@ -32,11 +31,13 @@
         .nav-item:hover, .nav-item.active { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
         .list-badge { background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-left: 5px; }
 
-        /* HERO & GRID */
         .hero-header { padding: 120px 0 80px; text-align: center; position: relative; z-index: 2; }
         .hero-title { font-size: clamp(3.5rem, 8vw, 6rem); font-weight: 900; margin: 0; line-height: 0.95; color: #fff; text-shadow: 0 10px 40px rgba(0,0,0,0.8); }
         #searchInput { width: 100%; padding: 25px 40px; border-radius: 100px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.6); color: #fff; font-size: 1.2rem; outline: none; transition: 0.4s; backdrop-filter: blur(20px); }
         #searchInput:focus { border-color: var(--accent); transform: scale(1.02); background: rgba(0, 0, 0, 0.8); }
+
+        /* PERBAIKAN JARAK DISINI */
+        #dynamicSection { padding-top: 120px; min-height: 80vh; }
 
         .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; margin-bottom: 40px; }
         .card { position: relative; cursor: pointer; border-radius: 12px; overflow: hidden; transition: 0.4s; border: 1px solid var(--border); background: #000; }
@@ -96,7 +97,7 @@
             </div>
         </div>
 
-        <div id="homeContent">
+        <div id="defaultContent">
             <h2 style="margin-bottom:30px; font-size:1.5rem; text-shadow:0 2px 10px black; border-left:4px solid var(--accent); padding-left:15px;">Trending Now</h2>
             <div id="trendingGrid" class="movie-grid">
                 <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
@@ -150,7 +151,7 @@
         function loadHome() {
             currentMode = 'home';
             document.getElementById('heroHeader').style.display = 'block';
-            document.getElementById('homeContent').style.display = 'block';
+            document.getElementById('defaultContent').style.display = 'block';
             document.getElementById('dynamicSection').style.display = 'none';
             
             if(document.getElementById('trendingGrid').innerHTML.includes('skeleton')) {
@@ -165,7 +166,7 @@
             currentPage = 1;
             
             document.getElementById('heroHeader').style.display = 'none';
-            document.getElementById('homeContent').style.display = 'none';
+            document.getElementById('defaultContent').style.display = 'none';
             document.getElementById('dynamicSection').style.display = 'block';
             document.getElementById('dynamicLabel').innerText = type === 'movie' ? 'Popular Movies' : 'Popular TV Shows';
             document.getElementById('paginationControls').style.display = 'flex';
@@ -176,7 +177,7 @@
         function loadWatchlist() {
             currentMode = 'list';
             document.getElementById('heroHeader').style.display = 'none';
-            document.getElementById('homeContent').style.display = 'none';
+            document.getElementById('defaultContent').style.display = 'none';
             document.getElementById('dynamicSection').style.display = 'block';
             document.getElementById('dynamicLabel').innerText = 'My Watchlist';
             document.getElementById('paginationControls').style.display = 'none';
@@ -192,7 +193,7 @@
             currentPage = 1;
             
             document.getElementById('heroHeader').style.display = 'none';
-            document.getElementById('homeContent').style.display = 'none';
+            document.getElementById('defaultContent').style.display = 'none';
             document.getElementById('dynamicSection').style.display = 'block';
             document.getElementById('dynamicLabel').innerText = label;
             document.getElementById('paginationControls').style.display = 'flex';
@@ -206,7 +207,7 @@
                 activeType = query;
                 currentPage = 1;
                 
-                document.getElementById('homeContent').style.display = 'none';
+                document.getElementById('defaultContent').style.display = 'none';
                 document.getElementById('dynamicSection').style.display = 'block';
                 document.getElementById('dynamicLabel').innerText = `Search: "${query}"`;
                 document.getElementById('paginationControls').style.display = 'none'; 
@@ -248,8 +249,6 @@
         }
 
         async function renderSimpleList(url, gridId, count) {
-            const grid = document.getElementById(gridId);
-            grid.innerHTML = Array(count).fill('<div class="skeleton"></div>').join('');
             const res = await fetch(url);
             const data = await res.json();
             displayResults(data.results.slice(0, count), gridId);
@@ -276,7 +275,6 @@
                         <div style="color:var(--accent); font-size:0.85rem; margin-top:5px;">★ ${m.vote_average ? m.vote_average.toFixed(1) : 'N/A'} • ${year}</div>
                     </div>
                 `;
-                // URL LINK (PENTING: Tidak ada garis miring di akhir)
                 card.onclick = () => window.location.href = `/${finalType}/${m.id}`;
                 grid.appendChild(card);
             });
