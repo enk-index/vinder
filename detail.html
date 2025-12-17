@@ -11,13 +11,12 @@
         body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
         .container { max-width: 1300px; margin: 0 auto; padding: 0 20px; width: 100%; }
 
-        /* --- UPDATED NAVBAR --- */
+        /* --- NAVBAR --- */
         nav.main-nav {
             position: sticky; top: 0; z-index: 1000;
             padding: 15px 0; transition: 0.4s;
-            background: transparent; /* Default transparent */
+            background: transparent;
         }
-        /* Class active saat scroll */
         nav.main-nav.scrolled { background: var(--glass); border-bottom: 1px solid var(--border); backdrop-filter: blur(15px); }
 
         .nav-container { display: flex; justify-content: space-between; align-items: center; }
@@ -27,11 +26,9 @@
         .nav-menu { display: flex; gap: 25px; align-items: center; }
         .nav-item { color: var(--sub-text); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: 0.3s; cursor: pointer; }
         .nav-item:hover { color: #fff; }
-        .nav-item.active { color: #fff; border-bottom: 2px solid var(--accent); }
-        
         .list-badge { background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-left: 5px; vertical-align: middle; }
 
-        /* GRADIENT BACKDROP */
+        /* BACKDROP */
         .full-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-size: cover; background-position: center; z-index: -2; transition: 0.5s; opacity: 0; }
         .full-backdrop.loaded { opacity: 0.4; }
         .full-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: linear-gradient(to bottom, rgba(5,5,8,0.2) 0%, rgba(5,5,8,0.9) 60%, rgba(5,5,8,1) 90%); z-index: -1; }
@@ -106,10 +103,10 @@
             .action-buttons { justify-content: center; }
             .genre-list { justify-content: center; }
             .skeleton-poster { width: 250px; height: 375px; margin: 0 auto; }
-            .nav-menu { display: none; } /* Hide menu on mobile for now */
+            .nav-menu { display: none; }
         }
 
-        /* --- UPDATED FOOTER --- */
+        /* FOOTER */
         footer { background: #08080a; padding: 70px 0 30px; border-top: 1px solid var(--border); margin-top: auto; }
         .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 40px; }
         .footer-col h4 { color: #fff; margin-bottom: 20px; font-weight: 700; }
@@ -154,12 +151,7 @@
             <div id="seasonsSection"></div>
 
             <div class="streaming-container">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
-                    <h3 style="margin:0; color:var(--sub-text); font-size:0.8rem; letter-spacing:2px; text-transform:uppercase;">Streaming Availability</h3>
-                    <select id="countrySelect" onchange="filterProviders(this.value)" style="background:rgba(255,255,255,0.1); color:white; border:1px solid var(--border); padding:8px 15px; border-radius:20px; outline:none; cursor:pointer;">
-                        <option value="ALL">🌍 Global (All)</option>
-                    </select>
-                </div>
+                <h3 style="margin-top: 0; color: var(--sub-text); font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px;">Streaming Availability</h3>
                 <div id="dProviders"></div>
             </div>
 
@@ -225,7 +217,6 @@
         const API_KEY = 'a820f2b45d233c0cc0c97d078536074f';
         const IMG = 'https://image.tmdb.org/t/p/original';
         const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
-        let globalProviders = {}; 
 
         // NAVBAR SCROLL EFFECT
         window.onscroll = () => {
@@ -361,9 +352,8 @@
                 }).join('');
                 document.getElementById('recommendationsGrid').innerHTML = recsHtml || '<p style="color:var(--sub-text)">No recommendations available.</p>';
 
-                // GLOBAL PROVIDERS SAVE
-                globalProviders = providers.results || {};
-                renderProviders(globalProviders, 'ID'); // Default Indonesia
+                // RENDER GLOBAL PROVIDERS
+                renderProviders(providers.results || {});
 
             } catch (e) {
                 console.error(e);
@@ -376,38 +366,13 @@
             document.getElementById('errorContainer').style.display = 'block';
         }
 
-        // PROVIDERS WITH FILTER
-        function renderProviders(results, filterCode = 'ALL') {
+        // PROVIDERS RENDERER (GLOBAL)
+        function renderProviders(results) {
             const pList = document.getElementById('dProviders');
-            const select = document.getElementById('countrySelect');
             pList.innerHTML = '';
-
-            // Populate Dropdown (Once)
-            if (select.options.length <= 1) {
-                const availableCountries = Object.keys(results).sort((a, b) => {
-                    if (a === 'ID') return -1;
-                    if (b === 'ID') return 1;
-                    return a.localeCompare(b);
-                });
-
-                availableCountries.forEach(code => {
-                    let name = code;
-                    try { name = regionNames.of(code); } catch (e) {}
-                    const option = document.createElement('option');
-                    option.value = code;
-                    option.innerText = `${code} - ${name}`;
-                    if (code === 'ID') option.selected = true;
-                    select.appendChild(option);
-                });
-                if (!results['ID'] && filterCode === 'ID') {
-                    select.value = 'ALL';
-                    filterCode = 'ALL';
-                }
-            }
-
+            
             const platMap = {};
             Object.keys(results).forEach(code => {
-                if (filterCode !== 'ALL' && code !== filterCode) return;
                 const country = results[code];
                 const all = [...(country.flatrate || []), ...(country.rent || []), ...(country.buy || [])];
                 
@@ -423,33 +388,27 @@
 
             const keys = Object.keys(platMap);
             if (keys.length === 0) {
-                pList.innerHTML = `<p style="color:var(--sub-text);">No streaming data found for this region.</p>`;
+                pList.innerHTML = `<p style="color:var(--sub-text);">No streaming data found.</p>`;
                 return;
             }
 
             keys.forEach(name => {
                 const data = platMap[name];
-                const showBadges = filterCode === 'ALL';
                 const row = document.createElement('div');
                 row.className = 'p-row';
                 row.innerHTML = `
                     <img src="${IMG + data.logo}" class="p-logo">
                     <div>
                         <div style="font-weight:bold; margin-bottom:8px; font-size:1.1rem;">${name}</div>
-                        ${showBadges ? `
                         <div style="display:flex; flex-wrap:wrap; gap:8px;">
                             ${data.countries.map(c => `<span class="c-badge"><b>${c.code}</b> <span>${c.name}</span></span>`).join('')}
-                        </div>` : ''}
+                        </div>
                     </div>
                 `;
                 pList.appendChild(row);
             });
         }
         
-        function filterProviders(code) {
-            renderProviders(globalProviders, code);
-        }
-
         function playTrailer(key) {
             if (!key) return;
             document.getElementById('youtubeFrame').src = `https://www.youtube.com/embed/${key}?autoplay=1`;
