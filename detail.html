@@ -6,17 +6,32 @@
     <title>StreamFinder Pro | Detail</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #050508; --accent: #e50914; --text: #ffffff; --sub-text: #b3b3b3; --border: rgba(255, 255, 255, 0.1); --glass: rgba(10, 10, 15, 0.8); }
+        :root { --bg: #050508; --accent: #e50914; --text: #ffffff; --sub-text: #b3b3b3; --border: rgba(255, 255, 255, 0.1); --glass: rgba(10, 10, 15, 0.9); }
         * { box-sizing: border-box; }
         body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
         .container { max-width: 1300px; margin: 0 auto; padding: 0 20px; width: 100%; }
 
-        nav.main-nav { background: rgba(5, 5, 8, 0.95); border-bottom: 1px solid var(--border); padding: 15px 0; position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(15px); }
+        /* --- UPDATED NAVBAR --- */
+        nav.main-nav {
+            position: sticky; top: 0; z-index: 1000;
+            padding: 15px 0; transition: 0.4s;
+            background: transparent; /* Default transparent */
+        }
+        /* Class active saat scroll */
+        nav.main-nav.scrolled { background: var(--glass); border-bottom: 1px solid var(--border); backdrop-filter: blur(15px); }
+
         .nav-container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.6rem; font-weight: 900; text-decoration: none; color: #fff; letter-spacing: -1.5px; cursor: pointer; }
         .logo span { color: var(--accent); }
 
-        /* GRADIENT FADE ON BACKDROP */
+        .nav-menu { display: flex; gap: 25px; align-items: center; }
+        .nav-item { color: var(--sub-text); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: 0.3s; cursor: pointer; }
+        .nav-item:hover { color: #fff; }
+        .nav-item.active { color: #fff; border-bottom: 2px solid var(--accent); }
+        
+        .list-badge { background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-left: 5px; vertical-align: middle; }
+
+        /* GRADIENT BACKDROP */
         .full-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-size: cover; background-position: center; z-index: -2; transition: 0.5s; opacity: 0; }
         .full-backdrop.loaded { opacity: 0.4; }
         .full-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: linear-gradient(to bottom, rgba(5,5,8,0.2) 0%, rgba(5,5,8,0.9) 60%, rgba(5,5,8,1) 90%); z-index: -1; }
@@ -32,27 +47,23 @@
         .genre-pill { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--border); padding: 8px 18px; border-radius: 30px; font-size: 0.85rem; font-weight: 600; margin-right: 10px; margin-bottom: 10px; display: inline-block; cursor: pointer; transition: 0.3s; }
         .genre-pill:hover { background: var(--accent); border-color: white; }
 
-        /* BUTTONS (Trailer, Watchlist, Share) */
+        /* BUTTONS */
         .action-buttons { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
         .btn-action { padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; border: none; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
-        
         .btn-trailer { background: #fff; color: #000; }
         .btn-trailer:hover { background: #ddd; }
-        
         .btn-watchlist { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid var(--border); }
         .btn-watchlist:hover { background: var(--accent); border-color: var(--accent); }
         .btn-watchlist.active { background: var(--accent); border-color: var(--accent); }
-
         .btn-share { background: transparent; color: var(--sub-text); border: 1px solid var(--border); }
         .btn-share:hover { background: rgba(255,255,255,0.1); color: #fff; border-color: #fff; }
 
-        /* CAST ITEM - CLICKABLE */
+        /* CAST & SEASONS */
         .cast-item { display: inline-block; margin-right: 15px; text-align: center; width: 80px; cursor: pointer; transition: 0.3s; }
         .cast-item:hover { transform: translateY(-5px); }
         .cast-item img { width: 70px; height: 70px; object-fit: cover; border-radius: 50%; border: 2px solid var(--border); transition: 0.3s; }
         .cast-item:hover img { border-color: var(--accent); }
 
-        /* SEASONS */
         .section-header { margin: 40px 0 20px; font-size: 1.3rem; border-left: 4px solid var(--accent); padding-left: 15px; }
         .season-list { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 15px; }
         .season-card { min-width: 100px; width: 100px; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 10px; border: 1px solid var(--border); text-align: center; }
@@ -78,15 +89,13 @@
         .video-container { position: relative; width: 85%; max-width: 900px; aspect-ratio: 16/9; }
         .close-trailer { position: absolute; top: -40px; right: 0; color: white; font-size: 30px; cursor: pointer; }
 
-        /* SKELETON */
+        /* SKELETON & ERROR */
         .skeleton { background: #222; position: relative; overflow: hidden; border-radius: 8px; }
         .skeleton-text { height: 20px; margin-bottom: 10px; width: 60%; }
         .skeleton-title { height: 40px; width: 80%; margin-bottom: 20px; }
         .skeleton-poster { width: 300px; height: 450px; }
         .skeleton::after { content: ""; position: absolute; top: 0; right: 0; bottom: 0; left: 0; transform: translateX(-100%); background-image: linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.05) 20%, rgba(255, 255, 255, 0.1) 60%, rgba(255, 255, 255, 0)); animation: shimmer 1.5s infinite; }
         @keyframes shimmer { 100% { transform: translateX(100%); } }
-
-        /* 404 & ERROR */
         .error-container { text-align: center; padding: 100px 20px; }
         .error-code { font-size: 5rem; font-weight: 900; color: var(--accent); margin: 0; }
         
@@ -97,16 +106,31 @@
             .action-buttons { justify-content: center; }
             .genre-list { justify-content: center; }
             .skeleton-poster { width: 250px; height: 375px; margin: 0 auto; }
+            .nav-menu { display: none; } /* Hide menu on mobile for now */
         }
-        footer { background: #08080a; padding: 60px 0 30px; border-top: 1px solid var(--border); margin-top: auto; }
+
+        /* --- UPDATED FOOTER --- */
+        footer { background: #08080a; padding: 70px 0 30px; border-top: 1px solid var(--border); margin-top: auto; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 40px; }
+        .footer-col h4 { color: #fff; margin-bottom: 20px; font-weight: 700; }
+        .footer-col a { display: block; color: var(--sub-text); text-decoration: none; margin-bottom: 10px; font-size: 0.9rem; transition: 0.3s; }
+        .footer-col a:hover { color: var(--accent); }
+        .social-icons { display: flex; gap: 15px; }
+        .social-icon { width: 35px; height: 35px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; justify-content: center; align-items: center; transition: 0.3s; color: white; cursor: pointer;}
+        .social-icon:hover { background: var(--accent); }
     </style>
 </head>
 <body>
 
-    <nav class="main-nav">
+    <nav class="main-nav" id="navbar">
         <div class="container nav-container">
             <a href="/" class="logo">STREAM<span>FINDER</span></a>
-            <div style="font-size: 0.8rem; color: var(--sub-text); font-weight: 600; letter-spacing: 1px;">GLOBAL RELEASE TRACKER</div>
+            <div class="nav-menu">
+                <a href="/" class="nav-item">Home</a>
+                <a onclick="alert('Use search to find movies!')" class="nav-item">Movies</a>
+                <a onclick="alert('Use search to find series!')" class="nav-item">TV Shows</a>
+                <a href="/" class="nav-item" title="Go to Home and click My List">My List <span class="list-badge" id="navCount">0</span></a>
+            </div>
         </div>
     </nav>
 
@@ -130,7 +154,12 @@
             <div id="seasonsSection"></div>
 
             <div class="streaming-container">
-                <h3 style="margin-top: 0; color: var(--sub-text); font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;">Streaming Availability by Region</h3>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+                    <h3 style="margin:0; color:var(--sub-text); font-size:0.8rem; letter-spacing:2px; text-transform:uppercase;">Streaming Availability</h3>
+                    <select id="countrySelect" onchange="filterProviders(this.value)" style="background:rgba(255,255,255,0.1); color:white; border:1px solid var(--border); padding:8px 15px; border-radius:20px; outline:none; cursor:pointer;">
+                        <option value="ALL">🌍 Global (All)</option>
+                    </select>
+                </div>
                 <div id="dProviders"></div>
             </div>
 
@@ -154,9 +183,41 @@
     </div>
 
     <footer>
-        <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
-            <div class="logo" onclick="window.location.href='/'">STREAM<span>FINDER</span></div>
-            <div style="color: var(--sub-text); font-size: 0.9rem;">© 2025 StreamFinder. Data by TMDB.</div>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo" style="margin-bottom: 20px;">STREAM<span>FINDER</span></div>
+                    <p style="color: var(--sub-text); font-size: 0.9rem; line-height: 1.6;">
+                        The ultimate streaming guide. Find where to watch your favorite movies and TV shows across hundreds of services worldwide.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>Discover</h4>
+                    <a href="/">Home</a>
+                    <a href="/">Trending Now</a>
+                    <a href="/">New Releases</a>
+                    <a href="/">Top Rated</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <a href="#">About Us</a>
+                    <a href="#">Contact</a>
+                    <a href="#">API</a>
+                    <a href="#">Privacy Policy</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Follow Us</h4>
+                    <div class="social-icons">
+                        <div class="social-icon">𝕏</div>
+                        <div class="social-icon">📸</div>
+                        <div class="social-icon">📘</div>
+                        <div class="social-icon">🐙</div>
+                    </div>
+                </div>
+            </div>
+            <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; text-align: center; color: var(--sub-text); font-size: 0.85rem;">
+                © 2025 StreamFinder Pro. All rights reserved. Data provided by TMDB.
+            </div>
         </div>
     </footer>
 
@@ -164,8 +225,18 @@
         const API_KEY = 'a820f2b45d233c0cc0c97d078536074f';
         const IMG = 'https://image.tmdb.org/t/p/original';
         const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
+        let globalProviders = {}; 
+
+        // NAVBAR SCROLL EFFECT
+        window.onscroll = () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        };
 
         window.onload = async () => {
+            updateNavCount(); // Update badge watchlist
+
             const path = window.location.pathname; 
             const parts = path.split('/').filter(part => part); 
             let type = (parts[0] === 'movie' || parts[0] === 'tv') ? parts[0] : null; 
@@ -204,20 +275,16 @@
                 // RENDER BACKDROP
                 const bg = document.getElementById('bgCanvas');
                 bg.style.backgroundImage = `url(${IMG + (m.backdrop_path || m.poster_path)})`;
-                bg.classList.add('loaded'); // Trigger fade in
+                bg.classList.add('loaded');
 
                 const year = (m.release_date || m.first_air_date || '').split('-')[0];
-                
-                // GENRES
                 const genresHtml = (m.genres || []).map(g => 
                     `<span class="genre-pill" onclick="window.location.href='/?genreId=${g.id}&genreName=${encodeURIComponent(g.name)}'">${g.name}</span>`
                 ).join('');
                 
-                // TRAILER
                 const trailer = videos.results.find(v => v.site === 'YouTube' && v.type === 'Trailer') || videos.results[0];
                 const trailerKey = trailer ? trailer.key : null;
 
-                // CAST (Clickable)
                 const castList = (credits.cast || []).filter(c => c.profile_path).slice(0, 6);
                 const castHtml = castList.map(c => `
                     <div class="cast-item" onclick="window.location.href='/?personId=${c.id}&personName=${encodeURIComponent(c.name)}'">
@@ -226,12 +293,12 @@
                     </div>
                 `).join('');
 
-                // WATCHLIST STATE
+                // WATCHLIST BUTTON STATE
                 const isSaved = checkWatchlist(m.id);
                 const watchlistBtnText = isSaved ? 'Remove from List' : 'Add to List';
                 const watchlistBtnClass = isSaved ? 'btn-watchlist active' : 'btn-watchlist';
 
-                // RENDER HERO
+                // RENDER INFO
                 const runtime = type === 'movie' ? (m.runtime ? `${Math.floor(m.runtime / 60)}h ${m.runtime % 60}m` : '') : '';
                 const episodeCount = type === 'tv' ? (m.number_of_episodes ? `${m.number_of_episodes} Episodes` : '') : '';
                 const infoDuration = runtime || episodeCount || '';
@@ -244,11 +311,9 @@
                         
                         <div class="action-buttons">
                             ${trailerKey ? `<button class="btn-action btn-trailer" onclick="playTrailer('${trailerKey}')">▶ Watch Trailer</button>` : ''}
-                            
                             <button id="wlBtn" class="btn-action ${watchlistBtnClass}" onclick="toggleWatchlist('${m.id}', '${type}', '${m.poster_path}', '${escapeHtml(m.title || m.name)}', '${m.vote_average}')">
                                 ${isSaved ? '✓' : '+'} ${watchlistBtnText}
                             </button>
-
                             <button class="btn-action btn-share" onclick="shareMovie('${escapeHtml(m.title || m.name)}', window.location.href)">
                                 ➦ Share
                             </button>
@@ -270,7 +335,7 @@
                     </div>
                 `;
 
-                // RENDER SEASONS (If TV)
+                // RENDER SEASONS
                 if (type === 'tv' && m.seasons) {
                     const seasonsHtml = m.seasons.filter(s => s.poster_path && s.season_number > 0).map(s => `
                         <div class="season-card">
@@ -284,7 +349,7 @@
                     }
                 }
 
-                // RENDER RECOMMENDATIONS (LIMITED TO 7)
+                // RENDER RECS
                 const recsHtml = recommendations.results.slice(0, 7).map(r => {
                     if(!r.poster_path) return '';
                     return `
@@ -296,7 +361,9 @@
                 }).join('');
                 document.getElementById('recommendationsGrid').innerHTML = recsHtml || '<p style="color:var(--sub-text)">No recommendations available.</p>';
 
-                renderProviders(providers);
+                // GLOBAL PROVIDERS SAVE
+                globalProviders = providers.results || {};
+                renderProviders(globalProviders, 'ID'); // Default Indonesia
 
             } catch (e) {
                 console.error(e);
@@ -309,14 +376,41 @@
             document.getElementById('errorContainer').style.display = 'block';
         }
 
-        function renderProviders(providers) {
+        // PROVIDERS WITH FILTER
+        function renderProviders(results, filterCode = 'ALL') {
             const pList = document.getElementById('dProviders');
+            const select = document.getElementById('countrySelect');
             pList.innerHTML = '';
-            const results = providers.results || {};
+
+            // Populate Dropdown (Once)
+            if (select.options.length <= 1) {
+                const availableCountries = Object.keys(results).sort((a, b) => {
+                    if (a === 'ID') return -1;
+                    if (b === 'ID') return 1;
+                    return a.localeCompare(b);
+                });
+
+                availableCountries.forEach(code => {
+                    let name = code;
+                    try { name = regionNames.of(code); } catch (e) {}
+                    const option = document.createElement('option');
+                    option.value = code;
+                    option.innerText = `${code} - ${name}`;
+                    if (code === 'ID') option.selected = true;
+                    select.appendChild(option);
+                });
+                if (!results['ID'] && filterCode === 'ID') {
+                    select.value = 'ALL';
+                    filterCode = 'ALL';
+                }
+            }
+
             const platMap = {};
             Object.keys(results).forEach(code => {
+                if (filterCode !== 'ALL' && code !== filterCode) return;
                 const country = results[code];
                 const all = [...(country.flatrate || []), ...(country.rent || []), ...(country.buy || [])];
+                
                 all.forEach(p => {
                     if (!platMap[p.provider_name]) platMap[p.provider_name] = { logo: p.logo_path, countries: [] };
                     if (!platMap[p.provider_name].countries.find(c => c.code === code)) {
@@ -326,27 +420,36 @@
                     }
                 });
             });
+
             const keys = Object.keys(platMap);
-            if (keys.length === 0) pList.innerHTML = '<p style="color:var(--sub-text);">No streaming data found.</p>';
+            if (keys.length === 0) {
+                pList.innerHTML = `<p style="color:var(--sub-text);">No streaming data found for this region.</p>`;
+                return;
+            }
+
             keys.forEach(name => {
                 const data = platMap[name];
-                data.countries.sort((a, b) => a.name.localeCompare(b.name));
+                const showBadges = filterCode === 'ALL';
                 const row = document.createElement('div');
                 row.className = 'p-row';
                 row.innerHTML = `
                     <img src="${IMG + data.logo}" class="p-logo">
                     <div>
                         <div style="font-weight:bold; margin-bottom:8px; font-size:1.1rem;">${name}</div>
+                        ${showBadges ? `
                         <div style="display:flex; flex-wrap:wrap; gap:8px;">
                             ${data.countries.map(c => `<span class="c-badge"><b>${c.code}</b> <span>${c.name}</span></span>`).join('')}
-                        </div>
+                        </div>` : ''}
                     </div>
                 `;
                 pList.appendChild(row);
             });
         }
+        
+        function filterProviders(code) {
+            renderProviders(globalProviders, code);
+        }
 
-        // --- TRAILER LOGIC ---
         function playTrailer(key) {
             if (!key) return;
             document.getElementById('youtubeFrame').src = `https://www.youtube.com/embed/${key}?autoplay=1`;
@@ -357,25 +460,15 @@
             document.getElementById('youtubeFrame').src = '';
         }
 
-        // --- SHARE LOGIC ---
         async function shareMovie(title, url) {
             if (navigator.share) {
-                try {
-                    await navigator.share({
-                        title: 'Watch ' + title,
-                        text: 'Check out this movie on StreamFinder:',
-                        url: url
-                    });
-                } catch (err) {
-                    console.log('Error sharing:', err);
-                }
+                try { await navigator.share({ title: 'Watch ' + title, text: 'Check out on StreamFinder:', url: url }); } catch (err) {}
             } else {
                 navigator.clipboard.writeText(url);
                 alert('Link copied to clipboard!');
             }
         }
 
-        // --- WATCHLIST LOGIC ---
         function checkWatchlist(id) {
             const list = JSON.parse(localStorage.getItem('watchlist') || '[]');
             return list.some(item => item.id == id);
@@ -387,25 +480,25 @@
             const btn = document.getElementById('wlBtn');
 
             if (index === -1) {
-                // Add
                 list.push({ id, type, poster_path: poster, title: unescapeHtml(title), vote_average: parseFloat(vote) });
                 btn.innerHTML = '✓ Remove from List';
                 btn.classList.add('active');
             } else {
-                // Remove
                 list.splice(index, 1);
                 btn.innerHTML = '+ Add to List';
                 btn.classList.remove('active');
             }
             localStorage.setItem('watchlist', JSON.stringify(list));
+            updateNavCount();
         }
 
-        function escapeHtml(text) {
-            return text.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+        function updateNavCount() {
+            const list = JSON.parse(localStorage.getItem('watchlist') || '[]');
+            document.getElementById('navCount').innerText = list.length;
         }
-        function unescapeHtml(text) {
-             return text.replace(/&apos;/g, "'").replace(/&quot;/g, '"');
-        }
+
+        function escapeHtml(text) { return text.replace(/'/g, "&apos;").replace(/"/g, "&quot;"); }
+        function unescapeHtml(text) { return text.replace(/&apos;/g, "'").replace(/&quot;/g, '"'); }
     </script>
 </body>
 </html>
