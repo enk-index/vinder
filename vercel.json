@@ -1,13 +1,12 @@
 {
   "cleanUrls": true,
-  "trailingSlash": true,
   "rewrites": [
     {
-      "source": "/movie/:path*",
+      "source": "/movie/:match*",
       "destination": "/detail.html"
     },
     {
-      "source": "/tv/:path*",
+      "source": "/tv/:match*",
       "destination": "/detail.html"
     }
   ]
