@@ -6,20 +6,30 @@
     <title>StreamFinder Pro | Home</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #050508; --accent: #e50914; --text: #ffffff; --sub-text: #b3b3b3; --border: rgba(255, 255, 255, 0.1); --glass: rgba(10, 10, 15, 0.8); }
+        :root { --bg: #050508; --accent: #e50914; --text: #ffffff; --sub-text: #b3b3b3; --border: rgba(255, 255, 255, 0.1); --glass: rgba(10, 10, 15, 0.9); }
         * { box-sizing: border-box; }
         body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
         .container { max-width: 1300px; margin: 0 auto; padding: 0 20px; width: 100%; }
         
-        /* NAV & HERO */
-        nav.main-nav { background: rgba(5, 5, 8, 0.95); border-bottom: 1px solid var(--border); padding: 15px 0; position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(15px); }
+        /* --- NAVBAR --- */
+        nav.main-nav {
+            position: sticky; top: 0; z-index: 1000;
+            padding: 15px 0; transition: 0.4s;
+            background: transparent;
+        }
+        nav.main-nav.scrolled { background: var(--glass); border-bottom: 1px solid var(--border); backdrop-filter: blur(15px); }
+
         .nav-container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.6rem; font-weight: 900; text-decoration: none; color: #fff; letter-spacing: -1.5px; cursor: pointer; }
         .logo span { color: var(--accent); }
-        .nav-links { display: flex; gap: 20px; align-items: center; }
-        .nav-link { color: var(--sub-text); text-decoration: none; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: 0.3s; }
-        .nav-link:hover, .nav-link.active { color: white; }
 
+        .nav-menu { display: flex; gap: 25px; align-items: center; }
+        .nav-item { color: var(--sub-text); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: 0.3s; cursor: pointer; }
+        .nav-item:hover { color: #fff; }
+        .nav-item.active { color: #fff; border-bottom: 2px solid var(--accent); }
+        .list-badge { background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-left: 5px; vertical-align: middle; }
+
+        /* HERO */
         .hero-header { padding: 150px 0 80px; text-align: center; background: radial-gradient(circle at center, rgba(229, 9, 20, 0.05) 0%, transparent 70%); }
         .hero-title { font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 900; margin: 0; line-height: 0.9; background: linear-gradient(to bottom, #fff 40%, #888 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         #searchInput { width: 100%; padding: 28px 40px; border-radius: 100px; border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(20, 20, 25, 0.8); color: #fff; font-size: 1.3rem; outline: none; transition: 0.4s; backdrop-filter: blur(20px); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); }
@@ -48,17 +58,31 @@
         .skeleton::after { content: ""; position: absolute; top: 0; right: 0; bottom: 0; left: 0; transform: translateX(-100%); background-image: linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.05) 20%, rgba(255, 255, 255, 0.1) 60%, rgba(255, 255, 255, 0)); animation: shimmer 1.5s infinite; }
         @keyframes shimmer { 100% { transform: translateX(100%); } }
 
-        footer { background: #08080a; padding: 60px 0 30px; border-top: 1px solid var(--border); margin-top: auto; }
+        /* FOOTER */
+        footer { background: #08080a; padding: 70px 0 30px; border-top: 1px solid var(--border); margin-top: auto; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 40px; }
+        .footer-col h4 { color: #fff; margin-bottom: 20px; font-weight: 700; }
+        .footer-col a { display: block; color: var(--sub-text); text-decoration: none; margin-bottom: 10px; font-size: 0.9rem; transition: 0.3s; }
+        .footer-col a:hover { color: var(--accent); }
+        .social-icons { display: flex; gap: 15px; }
+        .social-icon { width: 35px; height: 35px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; justify-content: center; align-items: center; transition: 0.3s; color: white; cursor: pointer;}
+        .social-icon:hover { background: var(--accent); }
+
+        @media (max-width: 768px) {
+            .nav-menu { display: none; }
+        }
     </style>
 </head>
 <body>
 
-    <nav class="main-nav">
+    <nav class="main-nav" id="navbar">
         <div class="container nav-container">
             <a href="/" class="logo">STREAM<span>FINDER</span></a>
-            <div class="nav-links">
-                <a onclick="window.location.href='/'" class="nav-link">Home</a>
-                <a onclick="loadWatchlist()" class="nav-link">My List <span id="listCount" style="background:var(--accent); padding:2px 6px; border-radius:10px; font-size:0.7rem;">0</span></a>
+            <div class="nav-menu">
+                <a href="/" class="nav-item">Home</a>
+                <a onclick="alert('Use search to find movies!')" class="nav-item">Movies</a>
+                <a onclick="alert('Use search to find series!')" class="nav-item">TV Shows</a>
+                <a onclick="loadWatchlist()" class="nav-item">My List <span class="list-badge" id="listCount">0</span></a>
             </div>
         </div>
     </nav>
@@ -98,9 +122,41 @@
     </main>
 
     <footer>
-        <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
-            <div class="logo">STREAM<span>FINDER</span></div>
-            <div style="color: var(--sub-text); font-size: 0.9rem;">© 2025 StreamFinder. Data by TMDB.</div>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo" style="margin-bottom: 20px;">STREAM<span>FINDER</span></div>
+                    <p style="color: var(--sub-text); font-size: 0.9rem; line-height: 1.6;">
+                        The ultimate streaming guide. Find where to watch your favorite movies and TV shows across hundreds of services worldwide.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>Discover</h4>
+                    <a href="/">Home</a>
+                    <a href="/">Trending Now</a>
+                    <a href="/">New Releases</a>
+                    <a href="/">Top Rated</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <a href="#">About Us</a>
+                    <a href="#">Contact</a>
+                    <a href="#">API</a>
+                    <a href="#">Privacy Policy</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Follow Us</h4>
+                    <div class="social-icons">
+                        <div class="social-icon">𝕏</div>
+                        <div class="social-icon">📸</div>
+                        <div class="social-icon">📘</div>
+                        <div class="social-icon">🐙</div>
+                    </div>
+                </div>
+            </div>
+            <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px; text-align: center; color: var(--sub-text); font-size: 0.85rem;">
+                © 2025 StreamFinder Pro. All rights reserved. Data provided by TMDB.
+            </div>
         </div>
     </footer>
 
@@ -113,6 +169,13 @@
         let currentParam = ''; 
         let currentPage = 1; 
         let activeMedia = 'movie';
+
+        // NAVBAR SCROLL EFFECT
+        window.onscroll = () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        };
 
         window.onload = () => {
             updateWatchlistCount();
@@ -249,6 +312,7 @@
                         <div style="color:var(--accent); margin-top:5px">★ ${m.vote_average ? m.vote_average.toFixed(1) : 'N/A'}</div>
                     </div>
                 `;
+                // NAVIGATION: Menggunakan URL cantik /type/id
                 card.onclick = () => window.location.href = `/${finalType}/${m.id}`;
                 grid.appendChild(card);
             });
