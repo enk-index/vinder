@@ -1,11 +1,16 @@
 {
+  "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/movie/:id",
+      "source": "/watchlist",
+      "destination": "/watchlist.html"
+    },
+    {
+      "source": "/movie/(.*)",
       "destination": "/detail.html"
     },
     {
-      "source": "/tv/:id",
+      "source": "/tv/(.*)",
       "destination": "/detail.html"
     }
   ]
