@@ -6,11 +6,11 @@
       "destination": "/watchlist.html"
     },
     {
-      "source": "/movie",
+      "source": "/movie/",
       "destination": "/detail.html"
     },
     {
-      "source": "/tv",
+      "source": "/tv/",
       "destination": "/detail.html"
     }
   ]
