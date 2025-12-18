@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Releasemap</title>
+    <title>Releasemap - Streaming Search Engine</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #050508; --accent: #e50914; --text: #ffffff; --sub-text: #b3b3b3; --border: rgba(255, 255, 255, 0.1); --glass: rgba(10, 10, 15, 0.9); }
@@ -11,7 +11,7 @@
         body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
         .container { max-width: 1300px; margin: 0 auto; padding: 0 20px; width: 100%; position: relative; z-index: 2; }
         
-        /* WALLPAPER */
+        /* WALLPAPER ANIMATION */
         .poster-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 0; overflow: hidden; pointer-events: none; display: flex; flex-direction: column; justify-content: center; gap: 20px; opacity: 0.6; filter: brightness(0.8) grayscale(30%); }
         .poster-row { display: flex; gap: 20px; width: 200%; flex-shrink: 0; }
         .poster-row img { width: 180px; border-radius: 10px; aspect-ratio: 2/3; object-fit: cover; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
@@ -36,9 +36,7 @@
         #searchInput { width: 100%; padding: 25px 40px; border-radius: 100px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.6); color: #fff; font-size: 1.2rem; outline: none; transition: 0.4s; backdrop-filter: blur(20px); }
         #searchInput:focus { border-color: var(--accent); transform: scale(1.02); background: rgba(0, 0, 0, 0.8); }
 
-        /* PERBAIKAN JARAK DISINI */
         #dynamicSection { padding-top: 40px; min-height: 80vh; }
-
         .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; margin-bottom: 40px; }
         .card { position: relative; cursor: pointer; border-radius: 12px; overflow: hidden; transition: 0.4s; border: 1px solid var(--border); background: #000; }
         .card:hover { transform: scale(1.05); border-color: var(--accent); z-index: 10; }
@@ -122,6 +120,7 @@
         let currentMode = 'home'; 
         let currentPage = 1;
         let activeType = 'movie'; 
+        let activeMediaType = 'movie'; // Menyimpan apakah sedang melihat movie atau tv
 
         window.onscroll = () => {
             const nav = document.getElementById('navbar');
@@ -137,12 +136,14 @@
             const tab = urlParams.get('tab');
             const genreId = urlParams.get('genreId');
             const personId = urlParams.get('personId');
+            const typeParam = urlParams.get('type') || 'movie'; // Ambil parameter type (tv/movie)
 
             if (tab === 'movie') loadCategory('movie');
             else if (tab === 'tv') loadCategory('tv');
             else if (tab === 'list') loadWatchlist();
-            else if (genreId) loadDynamic('genre', genreId, `Genre: ${urlParams.get('genreName')}`);
-            else if (personId) loadDynamic('person', personId, `Starring: ${urlParams.get('personName')}`);
+            // Perbaikan: Teruskan typeParam ke loadDynamic
+            else if (genreId) loadDynamic('genre', genreId, `Genre: ${urlParams.get('genreName')}`, typeParam);
+            else if (personId) loadDynamic('person', personId, `Starring: ${urlParams.get('personName')}`, typeParam);
             else loadHome(); 
 
             document.getElementById('searchInput').oninput = (e) => handleSearch(e.target.value);
@@ -163,6 +164,7 @@
         function loadCategory(type) {
             currentMode = 'category';
             activeType = type;
+            activeMediaType = type;
             currentPage = 1;
             
             document.getElementById('heroHeader').style.display = 'none';
@@ -187,15 +189,17 @@
             document.getElementById('totalCountDisplay').innerText = `(${list.length} items)`;
         }
 
-        function loadDynamic(mode, param, label) {
+        // Perbaikan: Tambahkan parameter mediaType
+        function loadDynamic(mode, param, label, mediaType = 'movie') {
             currentMode = mode;
             activeType = param; 
+            activeMediaType = mediaType;
             currentPage = 1;
             
             document.getElementById('heroHeader').style.display = 'none';
             document.getElementById('defaultContent').style.display = 'none';
             document.getElementById('dynamicSection').style.display = 'block';
-            document.getElementById('dynamicLabel').innerText = label;
+            document.getElementById('dynamicLabel').innerText = `${label} (${mediaType.toUpperCase()})`;
             document.getElementById('paginationControls').style.display = 'flex';
             
             fetchData();
@@ -220,6 +224,7 @@
             }
         }
 
+        // Perbaikan: Gunakan activeMediaType untuk memilih endpoint
         async function fetchData() {
             const grid = document.getElementById('dynamicGrid');
             grid.innerHTML = Array(12).fill('<div class="skeleton"></div>').join('');
@@ -228,18 +233,22 @@
             if (currentMode === 'category') {
                 url = `https://api.themoviedb.org/3/discover/${activeType}?api_key=${API_KEY}&sort_by=popularity.desc&page=${currentPage}`;
             } else if (currentMode === 'genre') {
-                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${activeType}&page=${currentPage}`;
+                url = `https://api.themoviedb.org/3/discover/${activeMediaType}?api_key=${API_KEY}&with_genres=${activeType}&page=${currentPage}`;
             } else if (currentMode === 'person') {
-                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_people=${activeType}&page=${currentPage}`;
+                url = `https://api.themoviedb.org/3/discover/${activeMediaType}?api_key=${API_KEY}&with_people=${activeType}&page=${currentPage}`;
             }
 
-            const res = await fetch(url);
-            const data = await res.json();
-            displayResults(data.results, 'dynamicGrid');
-            
-            document.getElementById('pageIndicator').innerText = `Page ${currentPage}`;
-            document.getElementById('prevBtn').disabled = currentPage === 1;
-            window.scrollTo(0,0);
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                displayResults(data.results, 'dynamicGrid');
+                
+                document.getElementById('pageIndicator').innerText = `Page ${currentPage}`;
+                document.getElementById('prevBtn').disabled = currentPage === 1;
+                window.scrollTo(0,0);
+            } catch (err) {
+                grid.innerHTML = '<p>Error loading data.</p>';
+            }
         }
 
         function changePage(step) {
@@ -257,7 +266,7 @@
         function displayResults(items, gridId) {
             const grid = document.getElementById(gridId);
             grid.innerHTML = '';
-            if(items.length === 0) { grid.innerHTML = '<p style="color:#888">No results found.</p>'; return; }
+            if(!items || items.length === 0) { grid.innerHTML = '<p style="color:#888; padding: 20px;">No results found.</p>'; return; }
 
             items.forEach(m => {
                 if (!m.poster_path) return;
@@ -269,7 +278,7 @@
                 card.className = 'card';
                 card.innerHTML = `
                     <div class="media-badge ${finalType === 'movie' ? '' : 'badge-tv'}">${finalType === 'movie' ? 'MOVIE' : 'SERIES'}</div>
-                    <img src="${IMG + m.poster_path}" loading="lazy">
+                    <img src="${IMG + m.poster_path}" loading="lazy" alt="${m.title || m.name}">
                     <div class="card-meta">
                         <div style="font-weight:bold; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">${m.title || m.name}</div>
                         <div style="color:var(--accent); font-size:0.85rem; margin-top:5px;">★ ${m.vote_average ? m.vote_average.toFixed(1) : 'N/A'} • ${year}</div>
@@ -290,6 +299,7 @@
                 createPosterRow(posters.slice(14, 20), 'row-left');
             } catch(e) {}
         }
+
         function createPosterRow(images, animClass) {
             const container = document.getElementById('posterBg');
             const row = document.createElement('div');
@@ -299,22 +309,11 @@
             });
             container.appendChild(row);
         }
+
         function updateWatchlistCount() {
             const list = JSON.parse(localStorage.getItem('watchlist') || '[]');
             document.getElementById('navCount').innerText = list.length;
         }
     </script>
-    <!-- Histats.com  START  (aync)-->
-<script type="text/javascript">var _Hasync= _Hasync|| [];
-_Hasync.push(['Histats.start', '1,4997366,4,0,0,0,00010000']);
-_Hasync.push(['Histats.fasi', '1']);
-_Hasync.push(['Histats.track_hits', '']);
-(function() {
-var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
-hs.src = ('//s10.histats.com/js15_as.js');
-(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
-})();</script>
-<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?4997366&101" alt="frontpage hit counter" border="0"></a></noscript>
-<!-- Histats.com  END  -->
 </body>
 </html>
