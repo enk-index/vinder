@@ -8,62 +8,262 @@
 
 <style>
 :root {
-  --bg:#050508; --accent:#e50914; --text:#fff;
-  --sub-text:#b3b3b3; --border:rgba(255,255,255,.1);
-  --glass:rgba(10,10,15,.9);
+  --bg:#050508;
+  --accent:#e50914;
+  --text:#ffffff;
+  --sub-text:#b3b3b3;
+  --border:rgba(255,255,255,0.1);
+  --glass:rgba(10,10,15,0.9);
 }
 *{box-sizing:border-box}
-body{margin:0;font-family:Inter,sans-serif;background:var(--bg);color:var(--text)}
-.container{max-width:1300px;margin:0 auto;padding:0 20px}
+body{
+  margin:0;
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+.container{max-width:1300px;margin:0 auto;padding:0 20px;width:100%}
 
-/* NAV */
+/* ================= NAV ================= */
 nav.main-nav{
-  position:sticky;top:0;z-index:1000;
+  position:sticky;
+  top:0;
+  z-index:1000;
   padding:15px 0;
-  background:rgba(5,5,8,.85);
+  background:rgba(5,5,8,0.85);
   backdrop-filter:blur(18px);
-  border-bottom:1px solid rgba(255,255,255,.08);
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  transition:.3s;
 }
 nav.main-nav.scrolled{
-  background:rgba(5,5,8,.95);
+  background:rgba(5,5,8,0.95);
 }
 .nav-container{display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:1.6rem;font-weight:900;color:#fff;text-decoration:none}
+.logo{font-size:1.6rem;font-weight:900;color:#fff;text-decoration:none;letter-spacing:-1.5px}
 .logo span{color:var(--accent)}
 .nav-menu{display:flex;gap:25px}
-.nav-item{color:var(--sub-text);text-decoration:none;font-weight:600}
+.nav-item{color:var(--sub-text);text-decoration:none;font-size:.9rem;font-weight:600}
 .nav-item:hover{color:#fff}
 .list-badge{background:var(--accent);padding:2px 6px;border-radius:4px;font-size:.7rem}
 
-/* BACKDROP */
-.full-backdrop{position:fixed;inset:0;background-size:cover;opacity:0;transition:.5s;z-index:-2}
+/* ================= BACKDROP ================= */
+.full-backdrop{
+  position:fixed;
+  inset:0;
+  background-size:cover;
+  background-position:center;
+  z-index:-2;
+  opacity:0;
+  transition:.5s;
+}
 .full-backdrop.loaded{opacity:.4}
-.full-overlay{position:fixed;inset:0;background:linear-gradient(to bottom,rgba(5,5,8,.2),rgba(5,5,8,1));z-index:-1}
+.full-overlay{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(
+    to bottom,
+    rgba(5,5,8,.2) 0%,
+    rgba(5,5,8,.9) 60%,
+    rgba(5,5,8,1) 90%
+  );
+  z-index:-1;
+}
 
-/* CONTENT */
-.btn-back{display:inline-block;margin:30px 0;padding:10px 20px;border-radius:30px;
-background:rgba(255,255,255,.1);color:#fff;text-decoration:none;border:1px solid var(--border)}
+/* ================= DETAIL ================= */
+.btn-back{
+  display:inline-flex;
+  align-items:center;
+  margin:30px 0;
+  padding:10px 20px;
+  border-radius:30px;
+  background:rgba(255,255,255,.1);
+  color:#fff;
+  border:1px solid var(--border);
+  text-decoration:none;
+}
+.btn-back:hover{background:var(--accent)}
 .detail-wrapper{display:flex;gap:50px;flex-wrap:wrap}
-.detail-poster{width:300px;border-radius:20px}
+.detail-poster{
+  width:300px;
+  border-radius:20px;
+  border:1px solid var(--border);
+  box-shadow:0 20px 50px rgba(0,0,0,.9)
+}
 .detail-info{flex:1;min-width:300px}
-.detail-title{font-size:clamp(2.5rem,5vw,4rem);font-weight:900}
+.detail-title{
+  font-size:clamp(2.5rem,5vw,4rem);
+  font-weight:900;
+  margin:0 0 15px;
+  line-height:1.1;
+}
+.genre-pill{
+  background:rgba(255,255,255,.1);
+  border:1px solid var(--border);
+  padding:8px 18px;
+  border-radius:30px;
+  font-size:.85rem;
+  font-weight:600;
+  margin:0 10px 10px 0;
+  display:inline-block;
+  cursor:pointer;
+}
+.genre-pill:hover{background:var(--accent)}
+.action-buttons{display:flex;gap:15px;margin-bottom:25px;flex-wrap:wrap}
+.btn-action{
+  padding:12px 24px;
+  border-radius:8px;
+  font-weight:700;
+  cursor:pointer;
+  border:none;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.btn-trailer{background:#fff;color:#000}
+.btn-watchlist{background:rgba(255,255,255,.1);color:#fff;border:1px solid var(--border)}
+.btn-watchlist.active,.btn-watchlist:hover{background:var(--accent);border-color:var(--accent)}
+.btn-share{background:transparent;color:var(--sub-text);border:1px solid var(--border)}
+.btn-share:hover{color:#fff}
 
-/* RECOMMENDATIONS */
-.rec-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:15px}
-.rec-card{position:relative;cursor:pointer;transition:.3s}
+/* ================= CAST ================= */
+.cast-item{
+  display:inline-block;
+  margin-right:15px;
+  text-align:center;
+  width:80px;
+  cursor:pointer;
+}
+.cast-item img{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid var(--border)
+}
+.cast-item:hover img{border-color:var(--accent)}
+
+/* ================= SECTIONS ================= */
+.section-header{
+  margin:40px 0 20px;
+  font-size:1.3rem;
+  border-left:4px solid var(--accent);
+  padding-left:15px;
+}
+
+/* ================= SEASONS ================= */
+.season-list{display:flex;gap:12px;overflow-x:auto;padding-bottom:15px}
+.season-card{
+  width:100px;
+  background:rgba(255,255,255,.05);
+  padding:8px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  text-align:center
+}
+.season-card img{
+  width:100%;
+  border-radius:6px;
+  aspect-ratio:2/3;
+  object-fit:cover;
+}
+
+/* ================= STREAMING ================= */
+.streaming-container{
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  border-radius:30px;
+  padding:40px;
+  margin:40px 0 80px;
+}
+.p-row{
+  display:flex;
+  gap:20px;
+  padding:20px 0;
+  border-bottom:1px solid rgba(255,255,255,.05)
+}
+.p-logo{width:55px;height:55px;border-radius:14px}
+.c-badge{
+  background:rgba(229,9,20,.1);
+  color:var(--accent);
+  padding:4px 12px;
+  border-radius:6px;
+  font-size:.75rem;
+  font-weight:800;
+  border:1px solid rgba(229,9,20,.2)
+}
+.c-badge span{color:#fff;font-weight:400}
+
+/* ================= RECOMMENDATIONS (PATCHED) ================= */
+.rec-list{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:15px
+}
+.rec-card{
+  position:relative;
+  cursor:pointer;
+  transition:.3s
+}
 .rec-card:hover{transform:scale(1.05)}
-.rec-card img{width:100%;border-radius:8px}
+.rec-card img{
+  width:100%;
+  border-radius:8px;
+  aspect-ratio:2/3;
+  object-fit:cover
+}
 .rec-badge{
-  position:absolute;top:8px;right:8px;
-  padding:4px 10px;font-size:.65rem;
-  font-weight:900;border-radius:6px;color:#fff;
+  position:absolute;
+  top:8px;
+  right:8px;
+  padding:4px 10px;
+  border-radius:6px;
+  font-size:.65rem;
+  font-weight:900;
+  color:#fff;
+  z-index:2
 }
 .rec-movie{background:#e50914}
 .rec-tv{background:#0070f3}
 
-/* FOOTER */
-footer{background:#08080a;padding:60px 0 30px;border-top:1px solid var(--border)}
-@media(max-width:768px){.nav-menu{display:none}}
+/* ================= TRAILER ================= */
+.trailer-modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.9);
+  z-index:2000;
+  justify-content:center;
+  align-items:center
+}
+.video-container{
+  width:85%;
+  max-width:900px;
+  aspect-ratio:16/9;
+  position:relative
+}
+.close-trailer{
+  position:absolute;
+  top:-40px;
+  right:0;
+  font-size:30px;
+  cursor:pointer
+}
+
+/* ================= FOOTER ================= */
+footer{
+  background:#08080a;
+  padding:60px 0 30px;
+  border-top:1px solid var(--border);
+  margin-top:auto
+}
+@media(max-width:768px){
+  .nav-menu{display:none}
+  .detail-wrapper{justify-content:center}
+}
 </style>
 </head>
 
@@ -84,64 +284,46 @@ footer{background:#08080a;padding:60px 0 30px;border-top:1px solid var(--border)
 <main class="container">
   <div id="bgCanvas" class="full-backdrop"></div>
   <div class="full-overlay"></div>
-
   <a href="/" class="btn-back">← Back to Home</a>
 
-  <div id="detailHero" class="detail-wrapper"></div>
+  <div id="skeletonLoader" class="detail-wrapper"></div>
+  <div id="detailHero" class="detail-wrapper" style="display:none"></div>
 
-  <h3 class="section-header">You May Also Like</h3>
-  <div id="recommendationsGrid" class="rec-list"></div>
+  <div id="extraSections" style="display:none">
+    <div id="seasonsSection"></div>
+
+    <div class="streaming-container">
+      <h3 style="margin-top:0;color:var(--sub-text);font-size:.8rem;letter-spacing:2px">Streaming Availability</h3>
+      <div id="dProviders"></div>
+    </div>
+
+    <h3 class="section-header">You May Also Like</h3>
+    <div id="recommendationsGrid" class="rec-list"></div>
+  </div>
 </main>
 
+<div id="trailerModal" class="trailer-modal" onclick="closeTrailer()">
+  <div class="video-container" onclick="event.stopPropagation()">
+    <div class="close-trailer" onclick="closeTrailer()">×</div>
+    <iframe id="youtubeFrame" width="100%" height="100%" allowfullscreen></iframe>
+  </div>
+</div>
+
 <footer>
-  <div class="container">© 2025 StreamFinder Pro</div>
+  <div class="container">© 2025 StreamFinder Pro. Data by TMDB.</div>
 </footer>
 
 <script>
-const API_KEY='a820f2b45d233c0cc0c97d078536074f';
-const IMG='https://image.tmdb.org/t/p/original';
-
+/* ===== NAV SCROLL ===== */
 window.addEventListener('scroll',()=>{
   navbar.classList.toggle('scrolled',window.scrollY>30);
 });
-
-(async()=>{
-  const parts=location.pathname.split('/').filter(Boolean);
-  const type=parts[0]; const id=parts[1];
-  if(!id||!type)return;
-
-  const res=await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=${API_KEY}`);
-  const rec=await fetch(`https://api.themoviedb.org/3/${type}/${id}/recommendations?api_key=${API_KEY}`);
-  const m=await res.json();
-  const r=await rec.json();
-
-  bgCanvas.style.backgroundImage=`url(${IMG+m.backdrop_path})`;
-  bgCanvas.classList.add('loaded');
-
-  detailHero.innerHTML=`
-    <img src="${IMG+m.poster_path}" class="detail-poster">
-    <div class="detail-info">
-      <h1 class="detail-title">${m.title||m.name}</h1>
-      <p>${m.overview||''}</p>
-    </div>
-  `;
-
-  recommendationsGrid.innerHTML=r.results.slice(0,7).map(x=>{
-    if(!x.poster_path)return '';
-    const t=x.title?'movie':'tv';
-    return `
-      <div class="rec-card" onclick="location.href='/${t}/${x.id}'">
-        <div class="rec-badge ${t==='movie'?'rec-movie':'rec-tv'}">
-          ${t==='movie'?'MOVIE':'SERIES'}
-        </div>
-        <img src="${IMG+x.poster_path}">
-        <div style="margin-top:6px;font-weight:bold;font-size:.8rem">
-          ${x.title||x.name}
-        </div>
-      </div>`;
-  }).join('');
-})();
 </script>
+
+<!-- ======================
+SISA SCRIPT KAMU (FETCH DETAIL, CAST, STREAMING, WATCHLIST, TRAILER, 404)
+TIDAK DIUBAH – PASTE DARI FILE ASLI KAMU DI SINI
+====================== -->
 
 </body>
 </html>
