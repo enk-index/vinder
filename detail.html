@@ -12,7 +12,15 @@
         body { margin: 0; font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
         .container { max-width: 1300px; margin: 0 auto; padding: 0 20px; width: 100%; }
 
-        nav.main-nav { position: sticky; top: 0; z-index: 1000; padding: 15px 0; transition: 0.4s; background: transparent; }
+        nav.main-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 15px 0;
+  background: rgba(5, 5, 8, 0.85);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(18px);
+}
         nav.main-nav.scrolled { background: var(--glass); border-bottom: 1px solid var(--border); backdrop-filter: blur(15px); }
         .nav-container { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 1.6rem; font-weight: 900; text-decoration: none; color: #fff; letter-spacing: -1.5px; cursor: pointer; }
