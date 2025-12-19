@@ -7,6 +7,14 @@
     {
       "source": "/tv/:id",
       "destination": "/detail.html"
+    },
+    {
+      "source": "/watchlist",
+      "destination": "/watchlist.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
